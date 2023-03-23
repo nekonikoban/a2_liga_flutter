@@ -1,37 +1,24 @@
 import 'dart:async';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 class GlobalData extends ChangeNotifier {
+  String _appInfo = '';
   bool _isConnected = false;
   double _refreshRate = 1.0;
   String _teamData = '';
 
+  String get appInfo => _appInfo;
   bool get isConnected => _isConnected;
   double get refreshRate => _refreshRate;
   String get teamData => _teamData;
 
-  void addConnectionListener() {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      switch (result.index) {
-        case 1:
-          _isConnected = true;
-          break;
-        case 2:
-          _isConnected = true;
-          break;
-        case 3:
-          _isConnected = true;
-          break;
-        case 4:
-          _isConnected = false;
-          break;
-        default:
-          _isConnected = false;
-          break;
-      }
-      updateConnectionStatus(_isConnected);
-    });
+  void updateAppInfo(appInfo) {
+    _appInfo = appInfo;
+    notifyListeners();
+  }
+
+  String getAppInfo() {
+    return _appInfo;
   }
 
   void updateConnectionStatus(bool isConnected) {

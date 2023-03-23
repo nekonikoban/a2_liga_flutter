@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -7,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 import 'package:html/parser.dart' as parser;
@@ -30,6 +30,12 @@ class LoginState with ChangeNotifier {
 class Globals extends ChangeNotifier {
   Globals() {
     print("GLOBALS INIT");
+  }
+
+  //APP VERSION
+  getAppInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo;
   }
 
   final dateToday = DateUtils.dateOnly(DateTime.now());

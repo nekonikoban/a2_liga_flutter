@@ -17,13 +17,14 @@ class _CustomMainTableRowState extends State<CustomMainTableRow> {
   @override
   Widget build(BuildContext context) {
     return DataTable(
+        horizontalMargin: 2.0,
         sortColumnIndex: 4,
         sortAscending: true,
         border: TableBorder.all(
-            color: const Color.fromARGB(23, 255, 255, 255),
+            color: const Color.fromARGB(0, 255, 255, 255),
             borderRadius: BorderRadius.circular(20.0)),
         columnSpacing: 10.0,
-        dataRowHeight: 50.0,
+        dataRowHeight: 70.0,
         headingRowHeight: 60.0,
         decoration: BoxDecoration(
           color: Colors.transparent,
@@ -119,8 +120,8 @@ class _CustomMainTableRowState extends State<CustomMainTableRow> {
                       Center(
                         child: Image.asset(
                           'assets/${widget.arrayImages[i]}.png',
-                          width: 20,
-                          height: 20,
+                          width: 23,
+                          height: 23,
                           fit: BoxFit.cover,
                         ),
                       ),

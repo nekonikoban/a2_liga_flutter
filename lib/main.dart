@@ -201,6 +201,32 @@ class _MyHomePageState extends State<MyHomePage> {
     return true;
   }
 
+  void getAppInfo() {
+    globals.getAppInfo().then((appInfo) => {
+          if (widget.globalData.isConnected && appInfo.version.isNotEmpty)
+            {
+              globals
+                  .scrapeAvailableAppData(appInfo.version)
+                  .then((webInfo) => {
+                        print("webInfo => $webInfo"),
+                        if (webInfo.isNotEmpty)
+                          {
+                            //PUSH NOTIFICATIONS
+                            globals.notificationPush(
+                                'Update Available'.tr(),
+                                '${'There is newer version of app available.'.tr()}\n${'Go to settings and press download button to update.'.tr()}',
+                                'a2liga',
+                                'a2liga',
+                                NotificationLayout.Inbox),
+                            //SAVE APP INFO
+                            Provider.of<GlobalData>(context, listen: false)
+                                .updateAppInfo(appInfo.version)
+                          }
+                      })
+            }
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -223,7 +249,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //CHECK NETWORK CONNECTION
     globals.getNetworkStatus().then((isConnected) => {
           //LISTEN TO CONNECTION CHANGE
-          //TODO: REPLACE widget.getGlobalData.isConnected WITH isConnected ON LOCAL LEVEL
           Connectivity()
               .onConnectivityChanged
               .listen((ConnectivityResult result) {
@@ -231,16 +256,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 .updateConnectionStatus(result != ConnectivityResult.none);
             if (widget.globalData.isConnected && !isInitial) {
               widget.globalData.updateConnectionStatus(true);
-              print("CONNECTED! NOT INITIAL");
               timerStart();
             } else if (widget.globalData.isConnected && isInitial) {
               widget.globalData.updateConnectionStatus(true);
+              //GET APP INFO, NOTIFY USER IF NEWER VERSION IS AVAILABLE
+              getAppInfo();
               //THIS WILL BE RUN ONCE UPON APP START
-              print("CONNECTED! INITIAL STATE");
               runScrape().then((value) => {timerStart()});
             } else if (!widget.globalData.isConnected) {
               widget.globalData.updateConnectionStatus(false);
-              print("NO INTERNET!");
               globals.showMessage('NO INTERNET'.tr());
               //DONT CANCEL TIMER BEFORE ITS INITIALIZED
               if (!isInitial) {
@@ -255,19 +279,6 @@ class _MyHomePageState extends State<MyHomePage> {
         //print("controller => ${_controller.index}");
       });
     });
-    //GET USER CACHE DATA
-    /* globals
-        .getUserDataFromCache(
-            globals.keyId,
-            globals.keyUsername,
-            globals.keyEmail,
-            globals.keyVerified,
-            globals.keyOnline,
-            globals.keyRole,
-            globals.keyAvatar)
-        .then((userInfo) => {
-              if (userInfo.isNotEmpty) {setState(() => {})}
-            }); */
   }
 
   @override
@@ -360,10 +371,12 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildScreens(context) {
     return [
       isScrapeDone
-          ? MainTableWidget(
-              array: array,
-              arrayImages: arrayImages,
-            )
+          ? SizedBox(
+              width: MediaQuery.of(context).size.width - 10,
+              child: MainTableWidget(
+                array: array,
+                arrayImages: arrayImages,
+              ))
           : Center(child: globals.wLoader),
       ScheduleScreen(globalData: widget.globalData),
       TeamsScreen(globalData: widget.globalData),

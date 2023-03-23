@@ -47,24 +47,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    //GET CURRENT APP VERSION
-    getAppInfo().then((appInfo) => {
-          appVersion = appInfo.version,
-          if (widget.globalData.isConnected)
-            {
-              globals.scrapeAvailableAppData(appVersion).then((webInfo) => {
-                    if (webInfo.isNotEmpty)
-                      {
-                        globals.notificationPush(
-                            'Update Available'.tr(),
-                            '${'There is newer version of app available.'.tr()}\n${'Go to settings and press download button to update.'.tr()}',
-                            'a2liga',
-                            'a2liga',
-                            NotificationLayout.Inbox)
-                      }
-                  })
-            }
-        });
     //LOAD NOTIFICATIONS SWITCH STATE
     globals
         .getFromCacheByKey('__switch__notifications')
@@ -208,12 +190,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             );
           });
         });
-  }
-
-  //APP VERSION
-  getAppInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    return packageInfo;
   }
 
   //MY TEAM DIALOG
@@ -515,11 +491,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () async => {
                 if (widget.globalData.isConnected)
                   {
-                    if (appVersion.isNotEmpty)
-                      {
-                        await globals.scrapeAvailableAppData(appVersion).then(
-                            (appData) => {showDownloadDialog(context, appData)})
-                      }
+                    print(
+                        "widget.globalData.appInfo.isNotEmpty => ${widget.globalData.appInfo}"),
+                    if (widget.globalData.appInfo.isNotEmpty)
+                      {showDownloadDialog(context, widget.globalData.appInfo)}
                   }
                 else
                   {globals.showMessage('NO INTERNET'.tr())}
