@@ -1,16 +1,10 @@
 # a2liga
 
-A new Flutter project.
+This app scrapes table on www.posavina.com on second south basketball league.
+Its made for sole purpose to nofity users when changes in table ocour.
+You can choose your favourite team and you will be notified.
 
-## Getting Started
+## Platform
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+App is made for android only at the time being, iOS platform required iOS
+device which I dont have at the moment. This will be queued on TODO list.
