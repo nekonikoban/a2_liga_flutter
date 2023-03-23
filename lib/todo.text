@@ -1,18 +1,20 @@
 1. [DONE] Fix push notifications on _timer when data has changed (function returns first index which has changed, which is not neccesserily myTeam...)
-2. Make main table sortable
+2. [DONE] Make main table sortable
 3. [DONE] Cache myTeam so when user gets back in app they get notified if myTeam data has changed recently
 4. [DONE] Make slider for users for refresh rate (1hr to 24hr)
 5. [DONE] Fix notification push icon on app bar (it show image skeleton but its white?)
 6. [DONE] Fix initialization if user starts the app without internet connection
 7. [DONE] Fix if user has no internet connection and tries to scrape (on all screens) or switches to a screen for the first time without internet
 8. [DONE] Fix table on `updated`, when it updated the array was filled but the table was empty (noState ?)
-9. Make AwesomeNotifications so android can hold multiple notifications istead of latest (only one)
+9. [DONE] Make AwesomeNotifications so android can hold multiple notifications istead of latest (only one)
 10.[DONE] Fix vertical scroll in `schedule` so it scrolls to specific part (index = 0 , 1, 2, 3, 4)
-11.When changing locale (settings) the connection defaults to `false` (in _global_data) and shows no internet message (only here on language state change)
+11.[DONE] When changing locale (settings) the connection defaults to `false` (in _global_data) and shows no internet message (only here on language state change)
 12.[DONE] Make push notification when new apk is uploaded (host: filebin.net, web: a2liga-update.vercel.app)
 13.[DONE] Change website structure / style
-14.Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
-15.Implement redirect from notification directly to website on tap
-16.Simplify hardcoded scraping functions
+14.[DONE]Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
+15.[DONE]Fix restoration method in main table while sorting (data does not revert back)
+16.Implement redirect from notification directly to website on tap
+17.Simplify hardcoded scraping functions
 
-Make code easier to read / updated ()
+
+Finally, Make code easier to read / update

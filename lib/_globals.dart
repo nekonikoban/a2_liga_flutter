@@ -10,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 import 'package:html/parser.dart' as parser;
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginState with ChangeNotifier {
   bool _isLoggedIn = false;
@@ -64,7 +65,7 @@ class Globals extends ChangeNotifier {
     // Add more headers here if necessary
   };
 
-  double refreshRate = 1.0;
+  final int refreshRate = 1;
 
   static const mainTableURL =
       'https://www.posavinasport.com/Ko%C5%A1arka/lmo.php?file=/3_12%20momcadi.l98';
@@ -286,6 +287,7 @@ class Globals extends ChangeNotifier {
 
   final awesomeNotifications = AwesomeNotifications();
 
+  //GENERAL NOTIFICATION PUSH
   notificationPush(String title, String message, String bigPicture,
       String largeIcon, NotificationLayout layout) async {
     await awesomeNotifications.createNotification(
@@ -300,6 +302,7 @@ class Globals extends ChangeNotifier {
       largeIcon: 'asset://assets/awesome_notifications/images/$largeIcon.png',
       notificationLayout: layout,
     )
+
         /* actionButtons: [
           NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
           NotificationActionButton(
@@ -314,6 +317,23 @@ class Globals extends ChangeNotifier {
               isDangerousOption: true)
         ] */
         );
+  }
+
+  //DOWNLOAD PUSH
+  notificationUpdatePush(int id, String title, String message,
+      String bigPicture, String largeIcon, NotificationLayout layout) async {
+    await awesomeNotifications.createNotification(
+        content: NotificationContent(
+      id: id,
+      channelKey: 'alerts',
+      title: title,
+      body: message,
+      summary: 'Following'.tr(),
+      payload: {"key": "val"},
+      bigPicture: 'asset://assets/awesome_notifications/images/$bigPicture.png',
+      largeIcon: 'asset://assets/awesome_notifications/images/$largeIcon.png',
+      notificationLayout: layout,
+    ));
   }
 
   final infoUsage =
@@ -374,10 +394,8 @@ class Globals extends ChangeNotifier {
   }
 
   //SCRAPE MAIN TABLE
-  Future scrapeData(
-      context, array, arrayImages, isInitial, isScrapeDone) async {
+  Future scrapeData(context, array, isInitial, isScrapeDone) async {
     array.clear();
-    arrayImages.clear();
     //GET DATA FROM SCRAPE AND PARSE IT
     final response = await httpClient.get(mainTableURL);
     final document = parser.parse(response.data);
@@ -411,11 +429,8 @@ class Globals extends ChangeNotifier {
       tmp = '';
       index++;
     }
-    //ASSIGN IMAGES TO CLUB NAMES
+    //REMOVE `KAZNE` FROM ARRAY
     for (var i = 0; i < numOfTeams; i++) {
-      if (array[i].contains(",")) {
-        arrayImages.add(array[i].split(',')[1]);
-      }
       //REMOVE STRING `KAZNE` IF IT EXISTS. HAD TO SPLIT ARRAY AND MANUALLY REJOIN IT
       if (array[i].split(',')[2].contains("Kazne")) {
         List<String> splitArray = array[i].split(',');
@@ -661,10 +676,5 @@ class Globals extends ChangeNotifier {
         curve: Curves.easeInOut,
       );
     }
-  }
-
-  //SCRAPE YOUTUBE CHANNEL
-  Future scrapeYoutube() async {
-    return 'UNKNOWN';
   }
 }

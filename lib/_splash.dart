@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '_global_data.dart';
+import '_global_data_stream.dart';
 import 'main.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(
             builder: (context) => MyHomePage(
                   title: '',
-                  globalData: GlobalData(),
                   globalDataStream: GlobalDataStream(),
                 )));
   }

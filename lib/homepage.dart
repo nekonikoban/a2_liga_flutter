@@ -4,10 +4,7 @@ import 'custom-widgets/table_row_main.dart';
 
 class MainTableWidget extends StatefulWidget {
   final List<String> array;
-  final List<String> arrayImages;
-  const MainTableWidget(
-      {Key? key, required this.array, required this.arrayImages})
-      : super(key: key);
+  const MainTableWidget({Key? key, required this.array}) : super(key: key);
   @override
   _MainTableWidgetState createState() => _MainTableWidgetState();
 }
@@ -31,7 +28,6 @@ class _MainTableWidgetState extends State<MainTableWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomMainTableRow(
-            arrayImages: widget.arrayImages,
             arrayTeams: widget.array,
           ),
         ],

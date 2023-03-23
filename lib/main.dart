@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '_global_data.dart';
+import '_global_data_stream.dart';
 import '_globals.dart';
 import '_splash.dart';
 import 'homepage.dart';
@@ -32,14 +34,19 @@ Future<void> main() async {
     ],
   );
   final initialArrayStream = GlobalDataStream();
-  runApp(ChangeNotifierProvider(
-    create: (_) => GlobalData(),
-    child: EasyLocalization(
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GlobalData()),
+      ],
+      child: EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('bs', 'BA')],
         path: 'assets/translations',
         startLocale: const Locale('en', 'US'),
-        child: MyApp(initialArrayStream: initialArrayStream)),
-  ));
+        child: MyApp(initialArrayStream: initialArrayStream),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -63,13 +70,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final GlobalData globalData;
   final GlobalDataStream globalDataStream;
   const MyHomePage(
-      {Key? key,
-      required this.globalData,
-      required this.globalDataStream,
-      required this.title})
+      {Key? key, required this.globalDataStream, required this.title})
       : super(key: key);
 
   // This class is the configuration for the state. It holds the values (in this
@@ -84,6 +87,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  GlobalData globalData = GlobalData();
   late StreamSubscription<List<String>> _streamSubscription;
   final globals = Globals();
 
@@ -96,14 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
   late Timer _timer;
   double refreshRate = 1.0;
   List<String> array = [];
-  List<String> arrayImages = [];
   String myTeam = '';
 
   //THIS FUNCTION IS RAN ONCE UPON STARTUP
   Future runScrape() async {
     //SCRAPE MAIN TABLE
-    globals.scrapeData(context, array, arrayImages, true, isScrapeDone).then(
-        (currentArray) {
+    globals.scrapeData(context, array, true, isScrapeDone).then((currentArray) {
       setState(() => {
             isInitial = false,
             isScrapeDone = true,
@@ -155,16 +157,13 @@ class _MyHomePageState extends State<MyHomePage> {
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
     _timer = Timer.periodic(
-        const Duration(
-            seconds:
-                10 /* hours: int.parse(globals.refreshRate.toStringAsFixed(0)) */),
-        (timer) {
-      if (widget.globalData.isConnected) {
+        const Duration(seconds: 10 /* hours: globals.refreshRate*/), (timer) {
+      if (globalData.isConnected) {
         globals
-            .scrapeData(context, array, arrayImages, isInitial, isScrapeDone)
+            .scrapeData(context, array, isInitial, isScrapeDone)
             //[0] IS INFO `ARRAY`, AND [1] IS `MY TEAM`
             .then((currentArray) => {
-                  //print("CHECKING FOR UPDATE..."),
+                  print("CHECKING FOR UPDATE..."),
                   if (globals.isDataUpdated(currentArray[0],
                       widget.globalDataStream.initialArray, currentArray[1]))
                     {
@@ -177,15 +176,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           'a2liga',
                           'a2liga',
                           NotificationLayout.Messaging),
-                      //TODO: CHECK IF BELOW WORKS AS EXPECTED
-                      //(WHEN TABLE UPDATED LAST TIME THE ARRAY WAS FILLED AND NOTIFICATIONS WERE OK,
-                      //BUT THE TABLE DID NOT REFRESH, IT WAS EMPTY)
-                      //PROBABLY BECAUSE THERE WAS NO STATE IN scrapeData BUT NOW WE HAVE IT BELOW
                       setState(() {}),
                       //RESTART TIMER
                       timerCancel()
                           .then((isCanceled) => {if (isCanceled) timerStart()})
                     }
+                  else
+                    {setState(() {})}
                 });
       } else {
         print("NO INTERNET...");
@@ -201,26 +198,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return true;
   }
 
-  void getAppInfo() {
+  void getAppInfo() async {
     globals.getAppInfo().then((appInfo) => {
-          if (widget.globalData.isConnected && appInfo.version.isNotEmpty)
+          if (globalData.isConnected && appInfo.version.isNotEmpty)
             {
               globals
                   .scrapeAvailableAppData(appInfo.version)
                   .then((webInfo) => {
-                        print("webInfo => $webInfo"),
                         if (webInfo.isNotEmpty)
                           {
                             //PUSH NOTIFICATIONS
-                            globals.notificationPush(
+                            globals.notificationUpdatePush(
+                                2,
                                 'Update Available'.tr(),
                                 '${'There is newer version of app available.'.tr()}\n${'Go to settings and press download button to update.'.tr()}',
                                 'a2liga',
                                 'a2liga',
-                                NotificationLayout.Inbox),
+                                NotificationLayout.BigText),
                             //SAVE APP INFO
                             Provider.of<GlobalData>(context, listen: false)
-                                .updateAppInfo(appInfo.version)
+                                .updateAppInfo(appInfo.version),
+                            Provider.of<GlobalData>(context, listen: false)
+                                .updateDownloadLink(webInfo),
                           }
                       })
             }
@@ -252,19 +251,19 @@ class _MyHomePageState extends State<MyHomePage> {
           Connectivity()
               .onConnectivityChanged
               .listen((ConnectivityResult result) {
-            widget.globalData
+            globalData
                 .updateConnectionStatus(result != ConnectivityResult.none);
-            if (widget.globalData.isConnected && !isInitial) {
-              widget.globalData.updateConnectionStatus(true);
+            if (globalData.isConnected && !isInitial) {
+              globalData.updateConnectionStatus(true);
               timerStart();
-            } else if (widget.globalData.isConnected && isInitial) {
-              widget.globalData.updateConnectionStatus(true);
+            } else if (globalData.isConnected && isInitial) {
+              globalData.updateConnectionStatus(true);
               //GET APP INFO, NOTIFY USER IF NEWER VERSION IS AVAILABLE
               getAppInfo();
               //THIS WILL BE RUN ONCE UPON APP START
               runScrape().then((value) => {timerStart()});
-            } else if (!widget.globalData.isConnected) {
-              widget.globalData.updateConnectionStatus(false);
+            } else if (!globalData.isConnected) {
+              globalData.updateConnectionStatus(false);
               globals.showMessage('NO INTERNET'.tr());
               //DONT CANCEL TIMER BEFORE ITS INITIALIZED
               if (!isInitial) {
@@ -373,14 +372,11 @@ class _MyHomePageState extends State<MyHomePage> {
       isScrapeDone
           ? SizedBox(
               width: MediaQuery.of(context).size.width - 10,
-              child: MainTableWidget(
-                array: array,
-                arrayImages: arrayImages,
-              ))
+              child: MainTableWidget(array: array))
           : Center(child: globals.wLoader),
-      ScheduleScreen(globalData: widget.globalData),
-      TeamsScreen(globalData: widget.globalData),
-      SettingsScreen(globalData: widget.globalData, array: array),
+      ScheduleScreen(globalData: globalData),
+      TeamsScreen(globalData: globalData),
+      SettingsScreen(globalData: globalData, array: array),
     ];
   }
 

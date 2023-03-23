@@ -100,11 +100,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (currentLocale[0] == 'bs') {
       context.setLocale(const Locale('en', 'US'));
       showToast('CHANGE SUCCESSFUL'.tr(), textStyle: globals.textStyleSchedule);
-      setState(() => {isAmericaTapped = true, isBosniaTapped = false});
+      //setState(() => {isAmericaTapped = true, isBosniaTapped = false});
     } else {
       context.setLocale(const Locale('bs', 'BA'));
       showToast('PROMJENA USPJESNA'.tr(), textStyle: globals.textStyleSchedule);
-      setState(() => {isAmericaTapped = false, isBosniaTapped = true});
+      //setState(() => {isAmericaTapped = false, isBosniaTapped = true});
     }
   }
 
@@ -491,10 +491,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () async => {
                 if (widget.globalData.isConnected)
                   {
-                    print(
-                        "widget.globalData.appInfo.isNotEmpty => ${widget.globalData.appInfo}"),
-                    if (widget.globalData.appInfo.isNotEmpty)
-                      {showDownloadDialog(context, widget.globalData.appInfo)}
+                    appVersion = Provider.of<GlobalData>(context, listen: false)
+                        .getDownloadLink(),
+                    showDownloadDialog(context, appVersion)
                   }
                 else
                   {globals.showMessage('NO INTERNET'.tr())}

@@ -1,8 +1,15 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 class GlobalData extends ChangeNotifier {
+  //SINGLETON
+  static final GlobalData _instance = GlobalData._internal();
+
+  factory GlobalData() => _instance;
+
+  GlobalData._internal();
+
   String _appInfo = '';
+  String _downloadLink = '';
   bool _isConnected = false;
   double _refreshRate = 1.0;
   String _teamData = '';
@@ -19,6 +26,15 @@ class GlobalData extends ChangeNotifier {
 
   String getAppInfo() {
     return _appInfo;
+  }
+
+  void updateDownloadLink(downloadLink) {
+    _downloadLink = downloadLink;
+    notifyListeners();
+  }
+
+  String getDownloadLink() {
+    return _downloadLink;
   }
 
   void updateConnectionStatus(bool isConnected) {
@@ -47,24 +63,4 @@ class GlobalData extends ChangeNotifier {
   String getTeamData() {
     return _teamData;
   }
-}
-
-class GlobalDataStream {
-  List<String> initialArray = [];
-
-  List<String> get data => initialArray;
-
-  void updateData(List<String> newArray) {
-    initialArray.clear();
-    initialArray.addAll(newArray);
-    _controller.add(newArray);
-  }
-
-  List<String> getData() {
-    return initialArray;
-  }
-
-  final _controller = StreamController<List<String>>.broadcast();
-
-  Stream<List<String>> get stream => _controller.stream;
 }
