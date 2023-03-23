@@ -1,0 +1,380 @@
+import 'dart:async';
+import 'package:a2_league/schedule.dart';
+import 'package:a2_league/settings.dart';
+import 'package:a2_league/team.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:provider/provider.dart';
+import '_global_data.dart';
+import '_globals.dart';
+import '_splash.dart';
+import 'homepage.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //LOCALIZATION
+  await EasyLocalization.ensureInitialized();
+  //AWESOME NOTIFICATIONS
+  await AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+          channelKey: 'alerts',
+          channelName: 'Basic Notifications',
+          channelDescription: 'Basic Tests',
+          defaultColor: const Color.fromARGB(255, 14, 44, 151),
+          ledColor: const Color.fromARGB(255, 14, 44, 151)),
+    ],
+  );
+  final initialArrayStream = GlobalDataStream();
+  runApp(ChangeNotifierProvider(
+    create: (_) => GlobalData(),
+    child: EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('bs', 'BA')],
+        path: 'assets/translations',
+        startLocale: const Locale('en', 'US'),
+        child: MyApp(initialArrayStream: initialArrayStream)),
+  ));
+}
+
+class MyApp extends StatelessWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalDataStream initialArrayStream;
+  MyApp({Key? key, required this.initialArrayStream}) : super(key: key);
+  //ROOT WIDGET OF APP
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        navigatorKey: navigatorKey,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        title: 'A2 Testing Faze',
+        theme: ThemeData(
+          canvasColor: const Color.fromARGB(255, 6, 54, 108),
+        ),
+        home: const SplashScreen()); /* const MyHomePage(title: '')); */
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  final GlobalData globalData;
+  final GlobalDataStream globalDataStream;
+  const MyHomePage(
+      {Key? key,
+      required this.globalData,
+      required this.globalDataStream,
+      required this.title})
+      : super(key: key);
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late StreamSubscription<List<String>> _streamSubscription;
+  final globals = Globals();
+
+  bool isInitial = true;
+  bool isScrapeDone = false;
+
+  final PersistentTabController _controller =
+      PersistentTabController(initialIndex: 0);
+
+  late Timer _timer;
+  double refreshRate = 1.0;
+  List<String> array = [];
+  List<String> arrayImages = [];
+  String myTeam = '';
+
+  //THIS FUNCTION IS RAN ONCE UPON STARTUP
+  Future runScrape() async {
+    //SCRAPE MAIN TABLE
+    globals.scrapeData(context, array, arrayImages, true, isScrapeDone).then(
+        (currentArray) {
+      setState(() => {
+            isInitial = false,
+            isScrapeDone = true,
+            //UPDATE STREAM TO CURRENT ARRAY FROM TABLE
+            widget.globalDataStream.updateData(currentArray[0]),
+          });
+      //SET STREAM LISTENER FOR CHANGES
+      _streamSubscription = widget.globalDataStream.stream.listen((newArray) {
+        setState(() => {
+              array.clear(),
+              array.addAll(newArray),
+            });
+      });
+    }).then((hasMyDataChanged) => {
+          //CHECK IF MY TEAM HAS CHANGED SINCE LAST STARTUP
+          globals.getFromCacheByKey('__my_team_data__').then((myTeamData) => {
+                if (myTeamData.isEmpty || array.isEmpty)
+                  {
+                    // print(
+                    // "YOU DONT HAVE ANY CACHED TEAM DATA OR ARRAY IS EMPTY")
+                  }
+                else
+                  {
+                    globals
+                        .hasMyTeamChangedSinceLastStartup(array, myTeamData)
+                        .then((hasChanged) => {
+                              if (hasChanged)
+                                {
+                                  globals.notificationPush(
+                                      'Update'.tr(),
+                                      '${myTeamData.split(',')[1]} ${'has been updated'.tr()} ${'since last time you were here'.tr()}',
+                                      'a2liga',
+                                      'a2liga',
+                                      NotificationLayout.Messaging)
+                                }
+                              else
+                                {
+                                  {
+                                    print(
+                                        "TEAM DATA DID NOT CHANGE SINCE LAST APP START")
+                                  }
+                                }
+                            })
+                  }
+              })
+        });
+  }
+
+  //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
+  void timerStart() {
+    _timer = Timer.periodic(
+        const Duration(
+            seconds:
+                10 /* hours: int.parse(globals.refreshRate.toStringAsFixed(0)) */),
+        (timer) {
+      if (widget.globalData.isConnected) {
+        globals
+            .scrapeData(context, array, arrayImages, isInitial, isScrapeDone)
+            //[0] IS INFO `ARRAY`, AND [1] IS `MY TEAM`
+            .then((currentArray) => {
+                  //print("CHECKING FOR UPDATE..."),
+                  if (globals.isDataUpdated(currentArray[0],
+                      widget.globalDataStream.initialArray, currentArray[1]))
+                    {
+                      //UPDATE STREAM
+                      widget.globalDataStream.updateData(currentArray[0]),
+                      //PUSH NOTIFICATION
+                      globals.notificationPush(
+                          'Update'.tr(),
+                          '${'Table has been updated on'.tr()} ${globals.currentTimeStamp()}',
+                          'a2liga',
+                          'a2liga',
+                          NotificationLayout.Messaging),
+                      //TODO: CHECK IF BELOW WORKS AS EXPECTED
+                      //(WHEN TABLE UPDATED LAST TIME THE ARRAY WAS FILLED AND NOTIFICATIONS WERE OK,
+                      //BUT THE TABLE DID NOT REFRESH, IT WAS EMPTY)
+                      //PROBABLY BECAUSE THERE WAS NO STATE IN scrapeData BUT NOW WE HAVE IT BELOW
+                      setState(() {}),
+                      //RESTART TIMER
+                      timerCancel()
+                          .then((isCanceled) => {if (isCanceled) timerStart()})
+                    }
+                });
+      } else {
+        print("NO INTERNET...");
+      }
+    });
+  }
+
+  Future timerCancel() async {
+    if (_timer.isActive) {
+      _timer.cancel();
+      return true;
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //INIT REFRESH RATE
+    globals.getFromCacheByKey('__refresh_rate__').then((refreshR) => {
+          if (refreshR.isEmpty)
+            refreshRate = 1.0
+          else
+            {
+              refreshRate = double.parse(refreshR.toString()),
+              Provider.of<GlobalData>(context, listen: false)
+                  .updateRefreshRate(refreshRate)
+            }
+        });
+    //CHECK IF DEVICE IS ALLOWED TO PUSH NOTIFICATIONS
+    AwesomeNotifications().isNotificationAllowed().then((isAllowd) => {
+          if (!isAllowd)
+            {AwesomeNotifications().requestPermissionToSendNotifications()}
+        });
+    //CHECK NETWORK CONNECTION
+    globals.getNetworkStatus().then((isConnected) => {
+          //LISTEN TO CONNECTION CHANGE
+          //TODO: REPLACE widget.getGlobalData.isConnected WITH isConnected ON LOCAL LEVEL
+          Connectivity()
+              .onConnectivityChanged
+              .listen((ConnectivityResult result) {
+            widget.globalData
+                .updateConnectionStatus(result != ConnectivityResult.none);
+            if (widget.globalData.isConnected && !isInitial) {
+              widget.globalData.updateConnectionStatus(true);
+              print("CONNECTED! NOT INITIAL");
+              timerStart();
+            } else if (widget.globalData.isConnected && isInitial) {
+              widget.globalData.updateConnectionStatus(true);
+              //THIS WILL BE RUN ONCE UPON APP START
+              print("CONNECTED! INITIAL STATE");
+              runScrape().then((value) => {timerStart()});
+            } else if (!widget.globalData.isConnected) {
+              widget.globalData.updateConnectionStatus(false);
+              print("NO INTERNET!");
+              globals.showMessage('NO INTERNET'.tr());
+              //DONT CANCEL TIMER BEFORE ITS INITIALIZED
+              if (!isInitial) {
+                timerCancel();
+              }
+            }
+          }),
+        });
+    //NAVIGATION LISTENER
+    _controller.addListener(() {
+      setState(() {
+        //print("controller => ${_controller.index}");
+      });
+    });
+    //GET USER CACHE DATA
+    /* globals
+        .getUserDataFromCache(
+            globals.keyId,
+            globals.keyUsername,
+            globals.keyEmail,
+            globals.keyVerified,
+            globals.keyOnline,
+            globals.keyRole,
+            globals.keyAvatar)
+        .then((userInfo) => {
+              if (userInfo.isNotEmpty) {setState(() => {})}
+            }); */
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    globals.printingAllPreferencesKeys();
+    return OKToast(
+        child: Scaffold(
+      appBar: globals.appBar('STATS'),
+      body: Container(child: navigation(context)),
+    ));
+  }
+
+  //NAVIGATION
+  Widget navigation(BuildContext context) {
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: buildScreens(context),
+      items: navigationItems(),
+      confineInSafeArea: true,
+      neumorphicProperties: const NeumorphicProperties(
+        shape: BoxShape.circle,
+        curveType: CurveType.emboss,
+        bevel: 20.0,
+      ),
+      backgroundColor:
+          const Color.fromARGB(0, 0, 0, 0), // Default is Colors.white.
+      handleAndroidBackButtonPress: true, // Default is true.
+      resizeToAvoidBottomInset:
+          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+      stateManagement: true, // Default is true.
+      hideNavigationBarWhenKeyboardShows:
+          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: const Color.fromARGB(0, 0, 0, 0),
+      ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: const ItemAnimationProperties(
+        // Navigation Bar's items animation properties.
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        // Screen transition animation on change of selected tab.
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 250),
+      ),
+      navBarStyle:
+          NavBarStyle.style1, // Choose the nav bar style with this property.
+    );
+  }
+
+  List<PersistentBottomNavBarItem> navigationItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.table),
+        title: ("HOME".tr()),
+        textStyle: TextStyle(fontFamily: globals.fontFam),
+        activeColorPrimary: globals.glowColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+        contentPadding: 1.0,
+      ),
+      PersistentBottomNavBarItem(
+          icon: const Icon(Icons.schedule_rounded),
+          title: ("SCHEDULE".tr()),
+          textStyle: TextStyle(fontFamily: globals.fontFam),
+          activeColorPrimary: globals.glowColor,
+          inactiveColorPrimary: CupertinoColors.systemGrey,
+          contentPadding: 1.0),
+      PersistentBottomNavBarItem(
+          icon: const Icon(Icons.person_2_rounded),
+          title: ("TEAMS".tr()),
+          textStyle: TextStyle(fontFamily: globals.fontFam),
+          activeColorPrimary: globals.glowColor,
+          inactiveColorPrimary: CupertinoColors.systemGrey,
+          contentPadding: 1.0),
+      PersistentBottomNavBarItem(
+          icon: const Icon(Icons.settings),
+          title: ("SETTINGS".tr()),
+          textStyle: TextStyle(fontFamily: globals.fontFam),
+          activeColorPrimary: globals.glowColor,
+          inactiveColorPrimary: CupertinoColors.systemGrey,
+          contentPadding: 1.0),
+    ];
+  }
+
+  List<Widget> buildScreens(context) {
+    return [
+      isScrapeDone
+          ? MainTableWidget(
+              array: array,
+              arrayImages: arrayImages,
+            )
+          : Center(child: globals.wLoader),
+      ScheduleScreen(globalData: widget.globalData),
+      TeamsScreen(globalData: widget.globalData),
+      SettingsScreen(globalData: widget.globalData, array: array),
+    ];
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _streamSubscription.cancel();
+    super.dispose();
+  }
+}
