@@ -13,8 +13,8 @@
 13.[DONE] Change website structure / style
 14.[DONE]Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
 15.[DONE]Fix restoration method in main table while sorting (data does not revert back)
-16.Implement redirect from notification directly to website on tap
-17.Simplify hardcoded scraping functions
+16.Simplify hardcoded scraping functions
+17.Implement redirect from notification directly to website on tap
 
 
-Finally, Make code easier to read / update
+Finally, Make code easier to read / update. General clean up.

@@ -391,7 +391,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           if (appData.isEmpty)
                             {Navigator.of(context).pop()}
                           else
-                            {launchUrl(appData)}
+                            {launchUrl(Uri.parse(appData))}
                         },
                     style: globals.elevatedBtnStyle,
                     child: Text(appData.isEmpty ? "OK".tr() : "DOWNLOAD".tr(),
@@ -493,7 +493,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   {
                     appVersion = Provider.of<GlobalData>(context, listen: false)
                         .getDownloadLink(),
-                    showDownloadDialog(context, appVersion)
+                    await showDownloadDialog(context, appVersion)
                   }
                 else
                   {globals.showMessage('NO INTERNET'.tr())}
