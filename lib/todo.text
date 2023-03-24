@@ -6,15 +6,17 @@
 6. [DONE] Fix initialization if user starts the app without internet connection
 7. [DONE] Fix if user has no internet connection and tries to scrape (on all screens) or switches to a screen for the first time without internet
 8. [DONE] Fix table on `updated`, when it updated the array was filled but the table was empty (noState ?)
-9. [DONE] Make AwesomeNotifications so android can hold multiple notifications istead of latest (only one)
+9. [DONE] Make AwesomeNotifications so android can hold multiple notifications istead of latest (change ID)
 10.[DONE] Fix vertical scroll in `schedule` so it scrolls to specific part (index = 0 , 1, 2, 3, 4)
 11.[DONE] When changing locale (settings) the connection defaults to `false` (in _global_data) and shows no internet message (only here on language state change)
 12.[DONE] Make push notification when new apk is uploaded (host: filebin.net, web: a2liga-update.vercel.app)
 13.[DONE] Change website structure / style
 14.[DONE]Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
 15.[DONE]Fix restoration method in main table while sorting (data does not revert back)
-16.Simplify hardcoded scraping functions
-17.Implement redirect from notification directly to website on tap
+16.[DONE]Add style to splash, `UKK IUS Family` (below logo, and after animation preferably?), check if localization works on splash.
+17.[DONE]Simplify hardcoded scraping functions
+18.Show loader while checking new version availability (in settings) on `Download` button
+19.Implement redirect from notification directly to website on tap
 
 
 Finally, Make code easier to read / update. General clean up.

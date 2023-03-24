@@ -23,12 +23,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   final DateTime _selectedDate = DateTime.now();
   List<String> arrayOld = [];
-  List<String> array = [];
-  List<String> arrayImages = [];
-  List<String> arrayDate = [];
-  List<String> arrayDateImages = [];
-  List<String> arrayX = [];
-  List<String> arrayXImages = [];
+  List<String> arrayImages = [], array = [];
+  List<String> arrayDateImages = [], arrayDate = [];
+  List<String> arrayXImages = [], arrayX = [];
   bool isScrapeDone = false;
   bool isDateChanged = false;
   int round = 0;

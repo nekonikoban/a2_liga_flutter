@@ -10,7 +10,6 @@ class TeamsScreen extends StatefulWidget {
   final GlobalData globalData;
   const TeamsScreen({Key? key, required this.globalData}) : super(key: key);
   @override
-  // ignore: library_private_types_in_public_api
   _TeamsScreenState createState() => _TeamsScreenState();
 }
 

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '_global_data.dart';
 import '_globals.dart';
 import 'custom-widgets/bounce_widget.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class SettingsScreen extends StatefulWidget {
       {Key? key, required this.globalData, required this.array})
       : super(key: key);
   @override
-  // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
