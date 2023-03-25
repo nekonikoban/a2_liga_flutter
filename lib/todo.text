@@ -16,7 +16,8 @@
 16.[DONE]Add style to splash, `UKK IUS Family` (below logo, and after animation preferably?), check if localization works on splash.
 17.[DONE]Simplify hardcoded scraping functions
 18.Show loader while checking new version availability (in settings) on `Download` button
-19.Implement redirect from notification directly to website on tap
+19.`AwesomeNotifications` uses deprecated API's (FlutterBitmapUtils.java:46, FlutterBitmapUtils.java:12, AwesomeNotificationsPlugin.java:112, DartBackgroundExecutor.java:74, DartBackgroundExecutor.java:86, AwesomeNotificationsPlugin.java:22)
+20.Implement redirect from notification directly to website on tap
 
 
 Finally, Make code easier to read / update. General clean up.

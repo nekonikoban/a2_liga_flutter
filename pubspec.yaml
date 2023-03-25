@@ -32,7 +32,7 @@ dependencies:
   package_info_plus: any #^3.0.3
   logger: any #^1.3.0
   connectivity_plus: any #^3.0.3
-  awesome_notifications: any #^0.7.4+1
+  awesome_notifications: ^0.7.4+1 #DEPRECATED API's
   cached_network_image: any #^3.2.3
   animations: any #^2.0.7
   flutter_glow: any #^0.2.0
@@ -41,7 +41,6 @@ dependencies:
   oktoast: any #^3.3.1
   persistent_bottom_nav_bar: any #^5.0.2
   shared_preferences: any #^2.0.17
-  image_picker: any #^0.8.7
   date_time_picker: any #^2.1.0
   animated_text_kit: any #^4.2.2
   flutter:

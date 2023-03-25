@@ -7,15 +7,16 @@ class BounceButton extends StatefulWidget {
   final Widget? asset;
   final VoidCallback onPressed;
 
-  BounceButton(
-      {required this.text,
+  const BounceButton(
+      {super.key,
+      required this.text,
       required this.color,
       this.icon,
       this.asset,
       required this.onPressed});
 
   @override
-  _BounceButtonState createState() => _BounceButtonState();
+  State<BounceButton> createState() => _BounceButtonState();
 }
 
 class _BounceButtonState extends State<BounceButton>
@@ -41,8 +42,8 @@ class _BounceButtonState extends State<BounceButton>
 
   void _startAnimation() {
     // Define a curve for the animation
-    final CurvedAnimation curve =
-        CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+    /* final CurvedAnimation curve =
+        CurvedAnimation(parent: _controller, curve: Curves.elasticOut); */
 
     // Start the animation
     _controller.forward(from: 0.0);

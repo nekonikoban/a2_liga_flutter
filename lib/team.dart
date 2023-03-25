@@ -10,7 +10,7 @@ class TeamsScreen extends StatefulWidget {
   final GlobalData globalData;
   const TeamsScreen({Key? key, required this.globalData}) : super(key: key);
   @override
-  _TeamsScreenState createState() => _TeamsScreenState();
+  State<TeamsScreen> createState() => _TeamsScreenState();
 }
 
 class _TeamsScreenState extends State<TeamsScreen> {

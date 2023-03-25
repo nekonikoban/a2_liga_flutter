@@ -6,7 +6,7 @@ class MainTableWidget extends StatefulWidget {
   final List<String> array;
   const MainTableWidget({Key? key, required this.array}) : super(key: key);
   @override
-  _MainTableWidgetState createState() => _MainTableWidgetState();
+  State<MainTableWidget> createState() => _MainTableWidgetState();
 }
 
 class _MainTableWidgetState extends State<MainTableWidget> {

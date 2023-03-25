@@ -17,7 +17,7 @@ class SettingsScreen extends StatefulWidget {
       {Key? key, required this.globalData, required this.array})
       : super(key: key);
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {

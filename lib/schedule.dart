@@ -12,7 +12,7 @@ class ScheduleScreen extends StatefulWidget {
   final GlobalData globalData;
   const ScheduleScreen({Key? key, required this.globalData}) : super(key: key);
   @override
-  _ScheduleScreenState createState() => _ScheduleScreenState();
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {

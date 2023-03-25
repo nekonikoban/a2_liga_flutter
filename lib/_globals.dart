@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -8,9 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:logger/logger.dart';
 import 'package:html/parser.dart' as parser;
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginState with ChangeNotifier {
   bool _isLoggedIn = false;
@@ -30,7 +27,7 @@ class LoginState with ChangeNotifier {
 
 class Globals extends ChangeNotifier {
   Globals() {
-    print("GLOBALS INIT");
+    //print("GLOBALS INIT");
   }
 
   //APP VERSION
@@ -259,14 +256,13 @@ class Globals extends ChangeNotifier {
   printingAllPreferencesKeys() async {
     final preferences = await SharedPreferences.getInstance();
     // ignore: avoid_print
-    print("|||||||||||||CACHED||||||||||||||||");
+    /* print("|||||||||||||CACHED||||||||||||||||"); */
 
     int prefsLenght = preferences.getKeys().length;
-    Set prefsSet = Set.from(preferences.getKeys());
+    //Set prefsSet = Set.from(preferences.getKeys());
 
     for (var i = 0; i < prefsLenght; i++) {
-      // ignore: prefer_interpolation_to_compose_strings, avoid_print
-      print(prefsSet.elementAt(i).toString() +
+      /* print(prefsSet.elementAt(i).toString() +
           " => " +
           preferences.get(prefsSet.elementAt(i).toString()).toString() +
           " [" +
@@ -274,10 +270,10 @@ class Globals extends ChangeNotifier {
               .get(prefsSet.elementAt(i).toString())
               .runtimeType
               .toString() +
-          "]");
+          "]"); */
     }
     // ignore: avoid_print
-    print("||||||||||||||CACHED||||||||||||||||");
+    /* print("||||||||||||||CACHED||||||||||||||||"); */
   }
 
   Future clearCache() async {
@@ -450,7 +446,7 @@ class Globals extends ChangeNotifier {
   }
 
   bool isDataUpdated(current, initial, myTeam) {
-    print("MYTEAM => $myTeam , ISEMPTY => ${myTeam.isEmpty}");
+    /* print("MYTEAM => $myTeam , ISEMPTY => ${myTeam.isEmpty}"); */
     if (current.isEmpty || initial.isEmpty) return false;
     bool equal = true;
 
@@ -459,7 +455,7 @@ class Globals extends ChangeNotifier {
       if (initial[i] != current[i] &&
           myTeam.isNotEmpty &&
           myTeam == current[i].split(',')[1]) {
-        print("MYTEAM HAS BEEN UPDATED [$myTeam]");
+        /* print("MYTEAM HAS BEEN UPDATED [$myTeam]"); */
         equal = false;
         notificationPush(
             myTeam,
@@ -476,7 +472,7 @@ class Globals extends ChangeNotifier {
     for (int i = 0; i < current.length; i++) {
       if (initial[i] != current[i]) {
         //NOTIFIES ANY CHANGES IN A STREAM
-        print("TABLE HAS BEEN UPDATED, BUT NOT MY TEAM");
+        /* print("TABLE HAS BEEN UPDATED, BUT NOT MY TEAM"); */
         equal = false;
         notificationPush(
             'Table Updated'.tr(),
@@ -489,10 +485,10 @@ class Globals extends ChangeNotifier {
     }
     //RETURN TRUE IF CHANGED
     if (!equal) {
-      print("NOT EQUAL, UPDATING STREAM...");
+      /* print("NOT EQUAL, UPDATING STREAM..."); */
       return true;
     } else {
-      print("EQUAL, NO CHANGES IN A STREAM");
+      /* print("EQUAL, NO CHANGES IN A STREAM"); */
       return false;
     }
   }
@@ -609,11 +605,11 @@ class Globals extends ChangeNotifier {
     var imageElement = document.querySelector('img[alt="Uporediti"]');
 
     if (imageElement != null) {
-      print('Found link => ${imageElement.outerHtml.split("\"")[1]}');
+      /* print('Found link => ${imageElement.outerHtml.split("\"")[1]}'); */
       teamGraph = imageElement.outerHtml.split("\"")[1];
-      print('TEAM GRAPH => $teamGraph');
+      /* print('TEAM GRAPH => $teamGraph'); */
     } else {
-      print('No image tag found with the specified alt attribute');
+      /* print('No image tag found with the specified alt attribute'); */
     }
     //setState(() => isGraphScraped = true);
   }

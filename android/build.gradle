@@ -16,6 +16,10 @@ allprojects {
         google()
         mavenCentral()
     }
+    //SHOWS DEPRECATED API's WITH Xlint
+    tasks.withType(JavaCompile) {
+        options.deprecation = true
+    }
 }
 
 rootProject.buildDir = '../build'

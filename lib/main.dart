@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '_global_data.dart';
 import '_global_data_stream.dart';
 import '_globals.dart';
@@ -144,8 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               else
                                 {
                                   {
-                                    print(
-                                        "TEAM DATA DID NOT CHANGE SINCE LAST APP START")
+                                    /* print(
+                                        "TEAM DATA DID NOT CHANGE SINCE LAST APP START") */
                                   }
                                 }
                             })
@@ -163,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
             .scrapeData(context, array, isInitial, isScrapeDone)
             //[0] IS INFO `ARRAY`, AND [1] IS `MY TEAM`
             .then((currentArray) => {
-                  print("CHECKING FOR UPDATE..."),
+                  /* print("CHECKING FOR UPDATE..."), */
                   if (globals.isDataUpdated(currentArray[0],
                       widget.globalDataStream.initialArray, currentArray[1]))
                     {
@@ -185,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     {setState(() {})}
                 });
       } else {
-        print("NO INTERNET...");
+        /* print("NO INTERNET..."); */
       }
     });
   }
