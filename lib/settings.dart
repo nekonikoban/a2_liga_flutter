@@ -25,7 +25,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   late AnimationController controller;
 
-  String appVersion = '';
+  String appData = '';
+  bool isDownloadTapped = false;
 
   List<String> array = [];
   List<String> arrayImages = [];
@@ -45,6 +46,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    //LOAD APP DATA
+    appData = Provider.of<GlobalData>(context, listen: false).getDownloadLink();
     //LOAD NOTIFICATIONS SWITCH STATE
     globals
         .getFromCacheByKey('__switch__notifications')
@@ -348,7 +351,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   //DOWNLOAD DIALOG (UPDATED APK)
-  showDownloadDialog(context, appData) async {
+  showDownloadDialog(context) async {
     await showDialog(
         context: context,
         builder: (_) {
@@ -375,14 +378,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 for (int i = 0; i < 2; i++) globals.devider20,
                 Center(
                   child: appData.isEmpty
-                      ? Text(
-                          '${'You have the latest version'.tr()} $appVersion',
+                      ? Text('${'You have the latest version'.tr()} $appData',
                           style: const TextStyle(color: Colors.white),
                           textAlign: TextAlign.center)
                       : Text('Updated version is available!'.tr(),
                           style: const TextStyle(color: Colors.white),
                           textAlign: TextAlign.center),
                 ),
+                globals.devider20,
                 //SAVE TO CACHE
                 ElevatedButton(
                     onPressed: () async => {
@@ -488,11 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: const Icon(Icons.download_outlined),
               onPressed: () async => {
                 if (widget.globalData.isConnected)
-                  {
-                    appVersion = Provider.of<GlobalData>(context, listen: false)
-                        .getDownloadLink(),
-                    await showDownloadDialog(context, appVersion)
-                  }
+                  {await showDownloadDialog(context)}
                 else
                   {globals.showMessage('NO INTERNET'.tr())}
               },

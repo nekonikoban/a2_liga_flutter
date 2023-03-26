@@ -16,7 +16,7 @@ class TeamsScreen extends StatefulWidget {
 class _TeamsScreenState extends State<TeamsScreen> {
   final globals = Globals();
 
-  int teamID = 0, teamIndexBlur = -1;
+  int teamID = 0, teamIndex = -1;
   List<String> array = [], arrayImages = [];
   List<String> arrayTeamSchedule = [], arrayTeamScheduleImages = [];
   String teamGraph = '';
@@ -45,11 +45,6 @@ class _TeamsScreenState extends State<TeamsScreen> {
         globals.showMessage('NO INTERNET'.tr());
       }
     });
-
-    /* initTeamData().then((value) => {
-          setState(() => {isInitDone = true}),
-          scrapeTeamGraphURL(1)
-        }); */
   }
 
   void animateToBottomOfScreen() {
@@ -99,7 +94,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: index == teamIndexBlur
+                              color: index == teamIndex
                                   ? Colors.blue.withOpacity(0.5)
                                   : Colors.transparent,
                               spreadRadius: 10,
@@ -117,18 +112,22 @@ class _TeamsScreenState extends State<TeamsScreen> {
                                     filterQuality: FilterQuality.high,
                                     'assets/${arrayImages[index]}.png')),
                             onTap: () async {
-                              teamIndexBlur = teamID = index;
-                              if (widget.globalData.isConnected) {
-                                await globals.scrapeTeamSchedule(
-                                    arrayTeamSchedule,
-                                    arrayTeamScheduleImages,
-                                    index + 1);
-                                setState(() => {isTeamTapped = true});
-                                Future.delayed(
-                                    const Duration(milliseconds: 100),
-                                    () => {animateToBottomOfScreen()});
+                              if (teamIndex == index) {
+                                //TAPPED SAME TEAM
                               } else {
-                                globals.showMessage('NO INTERNET'.tr());
+                                teamIndex = teamID = index;
+                                if (widget.globalData.isConnected) {
+                                  await globals.scrapeTeamSchedule(
+                                      arrayTeamSchedule,
+                                      arrayTeamScheduleImages,
+                                      index + 1);
+                                  setState(() => {isTeamTapped = true});
+                                  Future.delayed(
+                                      const Duration(milliseconds: 100),
+                                      () => {animateToBottomOfScreen()});
+                                } else {
+                                  globals.showMessage('NO INTERNET'.tr());
+                                }
                               }
                             })),
                   ),
