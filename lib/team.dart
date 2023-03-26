@@ -16,11 +16,9 @@ class TeamsScreen extends StatefulWidget {
 class _TeamsScreenState extends State<TeamsScreen> {
   final globals = Globals();
 
-  int teamID = 0;
-  List<String> array = [];
-  List<String> arrayImages = [];
-  List<String> arrayTeamSchedule = [];
-  List<String> arrayTeamScheduleImages = [];
+  int teamID = 0, teamIndexBlur = -1;
+  List<String> array = [], arrayImages = [];
+  List<String> arrayTeamSchedule = [], arrayTeamScheduleImages = [];
   String teamGraph = '';
   bool isInitDone = false;
   bool isScrapeDone = false;
@@ -63,6 +61,15 @@ class _TeamsScreenState extends State<TeamsScreen> {
     );
   }
 
+  void animateToTopOfScreen() {
+    _scrollController.animateTo(
+      //Force scroll to the bottom
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(milliseconds: 2500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   Widget table(BuildContext context) {
     return SingleChildScrollView(
         controller: _scrollController,
@@ -71,59 +78,61 @@ class _TeamsScreenState extends State<TeamsScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             globals.devider20,
-            //TEAM TABLE
-            DataTable(
-                sortColumnIndex: 0,
-                border: TableBorder.all(
-                    color: const Color.fromARGB(23, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(20.0)),
-                columnSpacing: 10.0,
-                dataRowHeight: 50.0,
-                headingRowHeight: 60.0,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                columns: [
-                  DataColumn(
-                      label: Text(
-                    'LOGO',
-                    textAlign: TextAlign.center,
-                    style: Globals().textStyleSchedule,
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'NAME'.tr(),
-                    textAlign: TextAlign.center,
-                    style: Globals().textStyleSchedule,
-                  )),
-                ],
-                rows: [
-                  for (int i = 0; i < array.length; i++) // x4
-                    DataRow(cells: [
-                      DataCell(
-                        Image.asset('assets/${arrayImages[i]}.png'),
-                      ),
-                      DataCell(
-                        Text(
-                          array[i],
-                          textAlign: TextAlign.start,
-                          style: Globals().textStyleSchedule,
+            //TEAMS
+            Text(
+              'Tap a team to display'.tr(),
+              style: TextStyle(
+                  fontFamily: globals.fontFam,
+                  fontSize: 20,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            for (int i = 0; i < 3; i++) globals.devider20,
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 20,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  children: List.generate(
+                    globals.numOfTeams,
+                    (index) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: index == teamIndexBlur
+                                  ? Colors.blue.withOpacity(0.5)
+                                  : Colors.transparent,
+                              spreadRadius: 10,
+                              blurRadius: 20,
+                              offset: const Offset(0, 0),
+                            ),
+                          ],
                         ),
-                        onTap: () async {
-                          teamID = i;
-                          if (widget.globalData.isConnected) {
-                            await globals.scrapeTeamSchedule(arrayTeamSchedule,
-                                arrayTeamScheduleImages, i + 1);
-                            setState(() => {isTeamTapped = true});
-                            animateToBottomOfScreen();
-                          } else {
-                            globals.showMessage('NO INTERNET'.tr());
-                          }
-                        },
-                      ),
-                    ]),
-                ]),
+                        width: MediaQuery.of(context).size.width / 5,
+                        height: MediaQuery.of(context).size.height % 100,
+                        child: GestureDetector(
+                            child: Transform.scale(
+                                scale: 2.0,
+                                child: Image.asset(
+                                    filterQuality: FilterQuality.high,
+                                    'assets/${arrayImages[index]}.png')),
+                            onTap: () async {
+                              teamIndexBlur = teamID = index;
+                              if (widget.globalData.isConnected) {
+                                await globals.scrapeTeamSchedule(
+                                    arrayTeamSchedule,
+                                    arrayTeamScheduleImages,
+                                    index + 1);
+                                setState(() => {isTeamTapped = true});
+                                Future.delayed(
+                                    const Duration(milliseconds: 100),
+                                    () => {animateToBottomOfScreen()});
+                              } else {
+                                globals.showMessage('NO INTERNET'.tr());
+                              }
+                            })),
+                  ),
+                )),
             for (int i = 0; i < 2; i++) globals.devider20,
             //SHOW SCHEDULE OF A TEAM ON TAPP
             isTeamTapped
@@ -156,6 +165,12 @@ class _TeamsScreenState extends State<TeamsScreen> {
                             )
                           : Container(),
                       globals.devider20, */
+                      FloatingActionButton(
+                        onPressed: () => {animateToTopOfScreen()},
+                        backgroundColor: globals.glowColor.withOpacity(0.25),
+                        child:
+                            const Icon(Icons.arrow_upward_outlined, size: 20),
+                      ),
                     ],
                   )
                 : Container()

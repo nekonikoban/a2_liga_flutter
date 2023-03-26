@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:a2_league/schedule.dart';
 import 'package:a2_league/settings.dart';
 import 'package:a2_league/team.dart';
+import 'package:a2_league/test.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -363,6 +364,13 @@ class _MyHomePageState extends State<MyHomePage> {
           activeColorPrimary: globals.glowColor,
           inactiveColorPrimary: CupertinoColors.systemGrey,
           contentPadding: 1.0),
+      /* PersistentBottomNavBarItem(
+          icon: const Icon(Icons.exposure_minus_1_sharp),
+          title: ("TEST".tr()),
+          textStyle: TextStyle(fontFamily: globals.fontFam),
+          activeColorPrimary: globals.glowColor,
+          inactiveColorPrimary: CupertinoColors.systemGrey,
+          contentPadding: 1.0), */
     ];
   }
 

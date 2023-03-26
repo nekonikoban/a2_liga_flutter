@@ -11,13 +11,16 @@
 11.[DONE] When changing locale (settings) the connection defaults to `false` (in _global_data) and shows no internet message (only here on language state change)
 12.[DONE] Make push notification when new apk is uploaded (host: filebin.net, web: a2liga-update.vercel.app)
 13.[DONE] Change website structure / style
-14.[DONE]Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
-15.[DONE]Fix restoration method in main table while sorting (data does not revert back)
-16.[DONE]Add style to splash, `UKK IUS Family` (below logo, and after animation preferably?), check if localization works on splash.
-17.[DONE]Simplify hardcoded scraping functions
+14.[DONE] Migrate appInfo veriable (settings) to main and send data back to settings so notification will be sent (if update is available) on startup
+15.[DONE] Fix restoration method in main table while sorting (data does not revert back)
+16.[DONE] Add style to splash, `UKK IUS Family` (below logo, and after animation preferably?), check if localization works on splash.
+17.[DONE] Simplify hardcoded scraping functions
 18.Show loader while checking new version availability (in settings) on `Download` button
-19.`AwesomeNotifications` uses deprecated API's (FlutterBitmapUtils.java:46, FlutterBitmapUtils.java:12, AwesomeNotificationsPlugin.java:112, DartBackgroundExecutor.java:74, DartBackgroundExecutor.java:86, AwesomeNotificationsPlugin.java:22)
-20.Implement redirect from notification directly to website on tap
+19.`AwesomeNotifications` uses deprecated API's (FlutterBitmapUtils.java:46, FlutterBitmapUtils.java:12, AwesomeNotificationsPlugin.java:112, DartBackgroundExecutor.java:74, DartBackgroundExecutor.java:86, AwesomeNotificationsPlugin.java:22). None of these affect functionality in my app at the moment.
+20.Implement `Choose by date` functionality and mark game dates in calendar
+21.[DONE] Better UI/UX on `Teams` 
+22.Better overal UI/UX
+23.Implement redirect from notification directly to website on tap
 
 
 Finally, Make code easier to read / update. General clean up.

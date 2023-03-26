@@ -150,7 +150,8 @@ class Globals extends ChangeNotifier {
         centerTitle: true,
         title: Text(
           "$title".tr(),
-          style: const TextStyle(fontFamily: "Anurati", fontSize: 20),
+          style: const TextStyle(
+              fontFamily: "Anurati", fontSize: 20, fontWeight: FontWeight.bold),
         ));
   }
 
