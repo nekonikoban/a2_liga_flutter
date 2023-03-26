@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:a2_league/schedule.dart';
 import 'package:a2_league/settings.dart';
 import 'package:a2_league/team.dart';
-import 'package:a2_league/test.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '_global_data.dart';
 import '_global_data_stream.dart';
 import '_globals.dart';
@@ -229,6 +229,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    //INIT NOTIFICATION LISTENERS (FOR WEBSITE PUSH)
+    AwesomeNotifications()
+        .setListeners(onActionReceivedMethod: onActionReceivedMethod);
     //INIT REFRESH RATE
     globals.getFromCacheByKey('__refresh_rate__').then((refreshR) => {
           if (refreshR.isEmpty)
@@ -385,6 +388,17 @@ class _MyHomePageState extends State<MyHomePage> {
       TeamsScreen(globalData: globalData),
       SettingsScreen(globalData: globalData, array: array),
     ];
+  }
+
+  //EXTRACTING onActionReceivedMethod FROM AwesomeNotifications NotificationController CLASS
+  //USER TAPPED NOTIFICATION
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    //ID = 2 => FOR UPDATES
+    if (receivedAction.id == 2) {
+      await launchUrl(Uri.parse(GlobalData().getDownloadLink()));
+    }
   }
 
   @override

@@ -15,7 +15,7 @@
 15.[DONE] Fix restoration method in main table while sorting (data does not revert back)
 16.[DONE] Add style to splash, `UKK IUS Family` (below logo, and after animation preferably?), check if localization works on splash.
 17.[DONE] Simplify hardcoded scraping functions
-18.Show loader while checking new version availability (in settings) on `Download` button
+18.[DONE] Improve tap reaction performance (in settings) on `Download` button tap
 19.`AwesomeNotifications` uses deprecated API's (FlutterBitmapUtils.java:46, FlutterBitmapUtils.java:12, AwesomeNotificationsPlugin.java:112, DartBackgroundExecutor.java:74, DartBackgroundExecutor.java:86, AwesomeNotificationsPlugin.java:22). None of these affect functionality in my app at the moment.
 20.[????] Implement `Choose by date` functionality and mark game dates in calendar (is it cost expensive?)
 21.[DONE] Better UI/UX on `Teams` 
