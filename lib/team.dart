@@ -104,7 +104,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                           ],
                         ),
                         width: MediaQuery.of(context).size.width / 5,
-                        height: MediaQuery.of(context).size.height % 100,
+                        height: 75,
                         child: GestureDetector(
                             child: Transform.scale(
                                 scale: 2.0,

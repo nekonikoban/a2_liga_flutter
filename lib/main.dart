@@ -156,34 +156,42 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
+    Completer completer; // COMPLETER TO PAUSE SCRAPING
     _timer = Timer.periodic(
         const Duration(seconds: 10 /* hours: globals.refreshRate*/), (timer) {
       if (globalData.isConnected) {
+        completer = Completer(); // CREATE A NEW COMPLETER FOR EACH SCRAPE
         globals
             .scrapeData(context, array, isInitial, isScrapeDone)
-            //[0] IS INFO `ARRAY`, AND [1] IS `MY TEAM`
-            .then((currentArray) => {
-                  /* print("CHECKING FOR UPDATE..."), */
-                  if (globals.isDataUpdated(currentArray[0],
-                      widget.globalDataStream.initialArray, currentArray[1]))
-                    {
-                      //UPDATE STREAM
-                      widget.globalDataStream.updateData(currentArray[0]),
-                      //PUSH NOTIFICATION
-                      globals.notificationPush(
-                          'Update'.tr(),
-                          '${'Table has been updated on'.tr()} ${globals.currentTimeStamp()}',
-                          'a2liga',
-                          'a2liga',
-                          NotificationLayout.Messaging),
-                      setState(() {}),
-                      //RESTART TIMER
-                      timerCancel()
-                          .then((isCanceled) => {if (isCanceled) timerStart()})
-                    }
-                  else
-                    {setState(() {})}
-                });
+            .then((currentArray) {
+          if (globals.isDataUpdated(currentArray[0],
+              widget.globalDataStream.initialArray, currentArray[1])) {
+            widget.globalDataStream.updateData(currentArray[0]);
+            globals.notificationPush(
+                'Update'.tr(),
+                '${'Table has been updated on'.tr()} ${globals.currentTimeStamp()}',
+                'a2liga',
+                'a2liga',
+                NotificationLayout.Messaging);
+            completer.complete(); // RESOLVE COMPLETER TO RESUME SCRAPING
+          } else {
+            setState(() {});
+            completer.complete(); // RESOLVE COMPLETER TO RESUME SCRAPING
+          }
+        });
+        completer.future.then((_) {
+          if (mounted) {
+            // IF WIDGET IS STILL MOUNTED
+            setState(() {});
+          }
+          //RESTART TIMER
+          timerCancel().then((isCanceled) {
+            if (isCanceled && mounted) {
+              // IF WIDGET IS STILL MOUNTED
+              timerStart();
+            }
+          });
+        });
       } else {
         /* print("NO INTERNET..."); */
       }

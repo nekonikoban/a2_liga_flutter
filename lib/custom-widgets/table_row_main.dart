@@ -125,7 +125,9 @@ class _CustomMainTableRowState extends State<CustomMainTableRow> {
                         (Set<MaterialState> states) {
                       if (i > 3 || isSorted) {
                         return Colors.transparent;
-                      } else {
+                      } else if (i == 0 || i == 1) {
+                        return const Color.fromARGB(47, 33, 243, 79);
+                      } else if (i == 2 || i == 3) {
                         return const Color.fromARGB(49, 33, 149, 243);
                       }
                     }),
