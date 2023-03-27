@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -179,13 +180,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 globals.devider20,
                 SingleChildScrollView(
                     scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width - 20,
-                        child: Text(
-                          '${globals.infoUsage.tr()}\n\n\n${globals.infoText.tr()}',
-                          textAlign: TextAlign.justify,
-                          style: globals.textStyleSchedule,
-                        ))),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 20,
+                          child: Text(
+                            '${globals.infoUsage.tr()}\n\n\n${globals.infoText.tr()}' +
+                                '\n\n',
+                            textAlign: TextAlign.justify,
+                            style: globals.textStyleSchedule,
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width - 20,
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'You can see app updates here' + '\n\n',
+                                style: globals.textStyleSchedule,
+                                children: [
+                                  TextSpan(
+                                    text: globals.appReleasesURL,
+                                    style: const TextStyle(color: Colors.blue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        launchUrl(
+                                            Uri.parse(globals.appReleasesURL));
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ))
+                      ],
+                    )),
                 globals.devider20,
               ]))),
             );

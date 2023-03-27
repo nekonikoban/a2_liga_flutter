@@ -37,7 +37,7 @@ class Globals extends ChangeNotifier {
   }
 
   final dateToday = DateUtils.dateOnly(DateTime.now());
-
+  final appReleasesURL = 'https://a2-liga.vercel.app/';
   final httpClient = Dio();
   final httpHeader = {
     "Access-Control-Allow-Origin": "*",
