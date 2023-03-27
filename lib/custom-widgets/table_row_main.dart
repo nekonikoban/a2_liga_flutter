@@ -130,6 +130,7 @@ class _CustomMainTableRowState extends State<CustomMainTableRow> {
                       } else if (i == 2 || i == 3) {
                         return const Color.fromARGB(49, 33, 149, 243);
                       }
+                      return null;
                     }),
                     cells: [
                       DataCell(

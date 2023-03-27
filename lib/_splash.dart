@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '_global_data_stream.dart';
-import '_globals.dart';
 import 'main.dart';
 
 class SplashScreen extends StatefulWidget {

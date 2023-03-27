@@ -27,10 +27,12 @@ class _MainTableWidgetState extends State<MainTableWidget> {
   GlobalKey previewContainer = GlobalKey();
   int originalSize = 2400;
 
-  void shareScreenshot() {
-    ShareFilesAndScreenshotWidgets().shareScreenshot(previewContainer,
+  shareScreenshot() async {
+    Globals().loadingDialog('Making Screenshot'.tr(), context);
+    await ShareFilesAndScreenshotWidgets().shareScreenshot(previewContainer,
         originalSize, "Table".tr(), "a2liga_tabela.png", "image/png",
         text: "Tabela");
+    return true;
   }
 
   Widget table(BuildContext context) {
@@ -65,7 +67,7 @@ class _MainTableWidgetState extends State<MainTableWidget> {
               ]),
           const SizedBox(width: 5),
           FloatingActionButton(
-              onPressed: () => {shareScreenshot()},
+              onPressed: () async => {await shareScreenshot()},
               backgroundColor: Globals().glowColor.withOpacity(0.25),
               child: const Icon(Icons.share_outlined)),
           const SizedBox(height: 20),

@@ -160,6 +160,39 @@ class Globals extends ChangeNotifier {
     size: 50,
   );
 
+  void loadingDialog(title, context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async {
+            Navigator.pop(context);
+            return true;
+          },
+          child: AlertDialog(
+            backgroundColor: Colors.transparent,
+            content: Container(
+              color: Colors.transparent,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(title, style: textStyleSchedule),
+                      const SizedBox(height: 50),
+                      wLoader
+                    ]),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget devider20 = const Divider(
     height: 20,
     thickness: 0,

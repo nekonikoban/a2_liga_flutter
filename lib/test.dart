@@ -33,10 +33,10 @@ class _TestScreenState extends State<TestScreen> {
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 108, 14, 14).withOpacity(0.2),
+                color: const Color.fromARGB(255, 108, 14, 14).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Text("test")),
+              child: const Text("test")),
         ));
   }
 }
