@@ -21,7 +21,7 @@
 21.[DONE] Better UI/UX on `Teams` 
 22.[DONE] Better overal UI/UX
 23.[DONE] Implement redirect from notification directly to website on tap
-24.[] Implement share functionality for main table, schedule.d and teams.d
+24.[DONE] Implement share functionality for main table, schedule.d and teams.d
 25.[DONE] Timer should be paused until tap events are done (main _timer) to avoid any conflict (use Completer and isMounted)
 26.[DONE] Mark 3rd and 4th fields as playoff and first two as direct promotion and show legend below the table
 

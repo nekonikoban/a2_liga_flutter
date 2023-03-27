@@ -59,7 +59,6 @@ class Globals extends ChangeNotifier {
     'sec-fetch-user': '?1',
     'upgrade-insecure-requests': '1',
     'connection': 'keep-alive',
-    // Add more headers here if necessary
   };
 
   final int refreshRate = 1;
@@ -128,6 +127,7 @@ class Globals extends ChangeNotifier {
   );
   final textStyleSchedule =
       const TextStyle(color: Colors.white, fontSize: 17.0);
+  final textStyleSharing = const TextStyle(color: Colors.black, fontSize: 17);
 
   final fontFam = "Anurati";
 

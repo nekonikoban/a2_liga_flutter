@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:share_files_and_screenshot_widgets/share_files_and_screenshot_widgets.dart';
+import '_globals.dart';
 import 'custom-widgets/table_row_main.dart';
 
 class MainTableWidget extends StatefulWidget {
@@ -21,6 +23,16 @@ class _MainTableWidgetState extends State<MainTableWidget> {
     super.dispose();
   }
 
+  //SCREENSHOT
+  GlobalKey previewContainer = GlobalKey();
+  int originalSize = 2400;
+
+  void shareScreenshot() {
+    ShareFilesAndScreenshotWidgets().shareScreenshot(previewContainer,
+        originalSize, "Table".tr(), "a2liga_tabela.png", "image/png",
+        text: "Tabela");
+  }
+
   Widget table(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
@@ -28,26 +40,35 @@ class _MainTableWidgetState extends State<MainTableWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CustomMainTableRow(
-            arrayTeams: widget.array,
+          RepaintBoundary(
+            key: previewContainer,
+            child: CustomMainTableRow(arrayTeams: widget.array),
           ),
-          /* const SizedBox(height: 20),
+          const SizedBox(height: 1),
           Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                     color: const Color.fromARGB(47, 33, 243, 79),
-                    width: 25,
-                    height: 10,
-                    child: Text('Promotion'.tr())),
+                    width: 30,
+                    height: 15),
+                const SizedBox(width: 5),
+                Text('Promotion'.tr(), style: Globals().textStyleSchedule),
                 const SizedBox(width: 20),
                 Container(
                     color: const Color.fromARGB(49, 33, 149, 243),
-                    width: 25,
-                    height: 10,
-                    child: Text('Play-off'.tr())),
-              ]) */
+                    width: 30,
+                    height: 15),
+                const SizedBox(width: 5),
+                Text('Play-off'.tr(), style: Globals().textStyleSchedule),
+              ]),
+          const SizedBox(width: 5),
+          FloatingActionButton(
+              onPressed: () => {shareScreenshot()},
+              backgroundColor: Globals().glowColor.withOpacity(0.25),
+              child: const Icon(Icons.share_outlined)),
+          const SizedBox(height: 20),
         ],
       )),
     );
