@@ -185,8 +185,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 20,
                           child: Text(
-                            '${globals.infoUsage.tr()}\n\n\n${globals.infoText.tr()}' +
-                                '\n\n',
+                            '${globals.infoUsage.tr()}\n\n\n${globals.infoText.tr()}'
+                            '\n\n',
                             textAlign: TextAlign.justify,
                             style: globals.textStyleSchedule,
                           ),
@@ -194,12 +194,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         SizedBox(
                             width: MediaQuery.of(context).size.width - 20,
                             child: RichText(
+                              textAlign: TextAlign.center,
                               text: TextSpan(
-                                text: 'You can see app updates here' + '\n\n',
+                                text:
+                                    '${'You can see app updates here'.tr()}\n',
                                 style: globals.textStyleSchedule,
                                 children: [
                                   TextSpan(
-                                    text: globals.appReleasesURL,
+                                    text: globals.appReleasesURL
+                                        .split('//')[1]
+                                        .substring(
+                                            0,
+                                            globals.appReleasesURL
+                                                    .split('//')[1]
+                                                    .length -
+                                                1),
                                     style: const TextStyle(color: Colors.blue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
