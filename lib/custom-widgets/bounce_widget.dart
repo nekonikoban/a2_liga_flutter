@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 
-class BounceButton extends StatefulWidget {
-  final String text;
+class BounceWidget extends StatefulWidget {
+  final String? text;
   final Color color;
   final Widget? icon;
   final Widget? asset;
+  final BoxShape shape;
   final VoidCallback onPressed;
 
-  const BounceButton(
+  const BounceWidget(
       {super.key,
-      required this.text,
+      this.text,
       required this.color,
       this.icon,
       this.asset,
+      required this.shape,
       required this.onPressed});
 
   @override
-  State<BounceButton> createState() => _BounceButtonState();
+  State<BounceWidget> createState() => _BounceWidgetState();
 }
 
-class _BounceButtonState extends State<BounceButton>
+class _BounceWidgetState extends State<BounceWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -66,16 +68,14 @@ class _BounceButtonState extends State<BounceButton>
                 alignment: Alignment.center,
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                decoration: BoxDecoration(
-                  color: widget.color,
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                ),
+                decoration:
+                    BoxDecoration(color: widget.color, shape: widget.shape),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.text,
+                      widget.text as String,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

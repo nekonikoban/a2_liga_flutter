@@ -1,3 +1,4 @@
+import 'package:a2_league/custom-widgets/bounce_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
@@ -66,10 +67,12 @@ class _MainTableWidgetState extends State<MainTableWidget> {
                 Text('Play-off'.tr(), style: Globals().textStyleSchedule),
               ]),
           const SizedBox(width: 5),
-          FloatingActionButton(
-              onPressed: () async => {await shareScreenshot()},
-              backgroundColor: Globals().glowColor.withOpacity(0.25),
-              child: const Icon(Icons.share_outlined)),
+          BounceWidget(
+              text: '',
+              color: Colors.blue,
+              shape: BoxShape.circle,
+              icon: const Icon(Icons.share_outlined),
+              onPressed: () async => {await shareScreenshot()}),
           const SizedBox(height: 20),
         ],
       )),

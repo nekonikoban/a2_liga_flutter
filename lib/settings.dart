@@ -521,7 +521,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BounceButton(
+            BounceWidget(
+              shape: BoxShape.rectangle,
               text: 'Download'.tr(),
               color: Colors.blue,
               icon: const Icon(Icons.download_outlined),
@@ -532,7 +533,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   {globals.showMessage('NO INTERNET'.tr())}
               },
             ),
-            BounceButton(
+            BounceWidget(
+              shape: BoxShape.rectangle,
               text: 'My Team'.tr(),
               color: Colors.blue,
               asset: myTeam.isNotEmpty
@@ -553,14 +555,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             //DISCLAIMER
-            BounceButton(
+            BounceWidget(
+                shape: BoxShape.rectangle,
                 text: 'Disclaimer'.tr(),
                 color: const Color.fromARGB(99, 33, 149, 243),
                 icon: const Icon(Icons.dangerous_outlined,
                     color: Color.fromARGB(150, 33, 149, 243)),
                 onPressed: () async => {await showDialogDisclaimer(context)}),
             //INFO
-            BounceButton(
+            BounceWidget(
+              shape: BoxShape.rectangle,
               text: 'App Info'.tr(),
               color: const Color.fromARGB(99, 33, 149, 243),
               icon: const Icon(Icons.info_outline_rounded,

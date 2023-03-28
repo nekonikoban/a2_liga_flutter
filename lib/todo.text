@@ -24,8 +24,8 @@
 24.[DONE] Implement share functionality for main table, schedule.d and teams.d
 25.[DONE] Timer should be paused until tap events are done (main _timer) to avoid any conflict (use Completer and isMounted)
 26.[DONE] Mark 3rd and 4th fields as playoff and first two as direct promotion and show legend below the table
-27.[] Sharing widget should show loader for users to know they did trigger tap event
-28.[] Wrap all buttons and icons with `Bounce` widget
+27.[DONE] Sharing widget should show loader for users to know they did trigger tap event
+28.[DONE] Wrap all buttons and icons with `Bounce` widget
 
 
 Finally, Make code easier to read / update. General clean up.
@@ -34,4 +34,4 @@ Finally, Make code easier to read / update. General clean up.
 
 
 
-TODO: After Play Store upload (25$) implement `New feature tutorials`
+TODO: After Play Store upload (25$), implement `New feature tutorials`

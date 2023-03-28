@@ -157,8 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
     Completer completer; // COMPLETER TO PAUSE SCRAPING
-    _timer = Timer.periodic(
-        const Duration(seconds: 10 /* hours: globals.refreshRate*/), (timer) {
+    _timer = Timer.periodic(Duration(hours: globals.refreshRate), (timer) {
       if (globalData.isConnected) {
         completer = Completer(); // CREATE A NEW COMPLETER FOR EACH SCRAPE
         globals

@@ -1,4 +1,5 @@
 import 'package:a2_league/_global_data.dart';
+import 'package:a2_league/custom-widgets/bounce_widget.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -153,23 +154,12 @@ class _TeamsScreenState extends State<TeamsScreen> {
                                   isDataScraped: isTeamTapped)
                               .tableRow()),
                       globals.devider20,
-                      /* isGraphScraped
-                          ? Column(
-                              children: [
-                                Text(teamGraph),
-                                Container(
-                                    color: Colors.orangeAccent,
-                                    child: Image.network(teamGraph))
-                              ],
-                            )
-                          : Container(),
-                      globals.devider20, */
-                      FloatingActionButton(
-                        onPressed: () => {animateToTopOfScreen()},
-                        backgroundColor: globals.glowColor.withOpacity(0.25),
-                        child:
-                            const Icon(Icons.arrow_upward_outlined, size: 20),
-                      ),
+                      BounceWidget(
+                          text: '',
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                          icon: const Icon(Icons.arrow_upward_outlined),
+                          onPressed: () => {animateToTopOfScreen()}),
                     ],
                   )
                 : Container()
