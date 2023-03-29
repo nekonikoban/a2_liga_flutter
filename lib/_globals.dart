@@ -129,7 +129,7 @@ class Globals extends ChangeNotifier {
       const TextStyle(color: Colors.white, fontSize: 17.0);
   final textStyleSharing = const TextStyle(color: Colors.black, fontSize: 17);
 
-  final fontFam = "Anurati";
+  final fontFam = "Montserrat"; //Anurati
 
   final keyId = "__id__";
   final keyUsername = "__username__";
@@ -150,8 +150,8 @@ class Globals extends ChangeNotifier {
         centerTitle: true,
         title: Text(
           "$title".tr(),
-          style: const TextStyle(
-              fontFamily: "Anurati", fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontFamily: fontFam, fontSize: 20, fontWeight: FontWeight.bold),
         ));
   }
 

@@ -27,10 +27,7 @@
 27.[DONE] Sharing widget should show loader for users to know they did trigger tap event
 28.[DONE] Wrap all buttons and icons with `Bounce` widget
 
-
-Finally, Make code easier to read / update. General clean up.
-
-
+29.[] Finally, Make code easier to read / update. General clean up.
 
 
 

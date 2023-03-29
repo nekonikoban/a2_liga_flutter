@@ -218,6 +218,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 ],
                               ),
+                            )),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width - 20,
+                            child: Text(
+                              'Made by Dario Damjanović',
+                              style: TextStyle(
+                                  fontFamily: globals.fontFam,
+                                  color: Colors.white),
                             ))
                       ],
                     )),
