@@ -224,6 +224,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             width: MediaQuery.of(context).size.width - 20,
                             child: Text(
                               'Made by Dario Damjanović',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: globals.fontFam,
                                   color: Colors.white),
