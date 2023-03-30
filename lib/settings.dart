@@ -327,7 +327,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String getMyTeamData(myTeam) {
-    print("myteam => $myTeam");
+    //print("myteam => $myTeam");
     String data = '';
     for (int i = 0; i < globals.numOfTeams; i++) {
       if (myTeam == widget.array[i].split(',')[1]) {
