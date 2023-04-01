@@ -26,9 +26,10 @@
 26.[DONE] Mark 3rd and 4th fields as playoff and first two as direct promotion and show legend below the table
 27.[DONE] Sharing widget should show loader for users to know they did trigger tap event
 28.[DONE] Wrap all buttons and icons with `Bounce` widget
-29.[] Theme changer (settings.d)
+29.[] Theres missing last round when scraping data on tap (teams.d)
+30.[] Theme changer (settings.d)
 
-30.[DONE] Finally, Make code easier to read / update. General clean up.
+[DONE] Finally, Make code easier to read / update. General clean up.
 
 
 
