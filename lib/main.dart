@@ -61,11 +61,11 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        title: 'A2 Testing Faze',
+        title: 'A2Minimized',
         theme: ThemeData(
-          canvasColor: const Color.fromARGB(255, 6, 54, 108),
+          canvasColor: Provider.of<GlobalData>(context).mainThemeColor,
         ),
-        home: const SplashScreen()); /* const MyHomePage(title: '')); */
+        home: const SplashScreen());
   }
 }
 
@@ -74,11 +74,6 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage(
       {Key? key, required this.globalDataStream, required this.title})
       : super(key: key);
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -292,7 +287,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    globals.printingAllPreferencesKeys();
+    /* globals.printingAllPreferencesKeys(); */
+    /* globals.clearCache(); */
     return OKToast(
         child: Scaffold(
       appBar: globals.appBar('STATS'),

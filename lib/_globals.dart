@@ -36,6 +36,8 @@ class Globals extends ChangeNotifier {
     return packageInfo;
   }
 
+  Color darkThemeColor = const Color.fromARGB(255, 32, 32, 32);
+  Color mainThemeColor = const Color.fromARGB(255, 6, 54, 108);
   final dateToday = DateUtils.dateOnly(DateTime.now());
   final appReleasesURL = 'https://a2-liga.vercel.app/';
   final httpClient = Dio();
@@ -285,6 +287,11 @@ class Globals extends ChangeNotifier {
       default:
         return false;
     }
+  }
+
+  Future clearCacheByKey(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(key);
   }
 
   printingAllPreferencesKeys() async {

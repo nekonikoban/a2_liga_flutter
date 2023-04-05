@@ -41,6 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool switchNotifications = false;
   bool switchCache = true;
+  bool switchTheme = false;
 
   double _sliderRefreshRateValue = 1.0;
 
@@ -68,6 +69,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     globals.getFromCacheByKey('__myteam__').then((cacheMyTeam) => {
           if (cacheMyTeam.isNotEmpty && cacheMyTeam != 'null')
             setState(() => {myTeam = cacheMyTeam})
+        });
+    //LOAD THEME SWITCH STATE
+    globals.getFromCacheByKey('canvasColor').then((myTheme) => {
+          if (myTheme.isNotEmpty &&
+              myTheme != 'null' &&
+              myTheme != widget.globalData.mainThemeColorCode)
+            setState(() => {switchTheme = true})
         });
     //INIT CLUB IMAGES
     arrayImages = globals.initTeamImages(arrayImages);
@@ -443,7 +451,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: globals.elevatedBtnStyle,
                     child: Text(appData.isEmpty ? "OK".tr() : "DOWNLOAD".tr(),
                         style: TextStyle(fontFamily: globals.fontFam))),
-                globals.devider20,
               ]))),
             );
           });
@@ -521,6 +528,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (value) async {
                     setState(() => {switchCache = value});
                     await globals.setToCacheByKey('__switch__cache', value);
+                  },
+                ),
+              ],
+            )),
+        //DEVIDER
+        globals.devider20,
+        //THEME SWITCH
+        SizedBox(
+            width: MediaQuery.of(context).size.width - 20,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Dark Theme'.tr(), style: globals.textStyleSchedule),
+                globals.devider20,
+                Switch(
+                  value: switchTheme,
+                  onChanged: (value) async {
+                    setState(() => {switchTheme = value});
+                    //IF ON, CHANGE TO DARK THEME
+                    if (switchTheme) {
+                      //SAVE TO CACHE
+                      await Provider.of<GlobalData>(context, listen: false)
+                          .saveMainThemeColor(globals.darkThemeColor);
+                      //NOTIFY LISTENER (SET STATE)
+                      widget.globalData.mainThemeColor = globals.darkThemeColor;
+                    } else {
+                      //SAVE TO CACHE
+                      await Provider.of<GlobalData>(context, listen: false)
+                          .saveMainThemeColor(globals.mainThemeColor);
+                      //NOTIFY LISTENER (SET STATE)
+                      widget.globalData.mainThemeColor = globals.mainThemeColor;
+                    }
                   },
                 ),
               ],
