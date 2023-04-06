@@ -38,6 +38,8 @@ class Globals extends ChangeNotifier {
 
   Color darkThemeColor = const Color.fromARGB(255, 32, 32, 32);
   Color mainThemeColor = const Color.fromARGB(255, 6, 54, 108);
+  Color darkButtonColor = const Color.fromARGB(99, 33, 149, 243);
+  Color darkNavColor = const Color.fromARGB(210, 46, 84, 255);
   final dateToday = DateUtils.dateOnly(DateTime.now());
   final appReleasesURL = 'https://a2-liga.vercel.app/';
   final httpClient = Dio();
@@ -151,9 +153,9 @@ class Globals extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Text(
-          "$title".tr(),
+          "$title",
           style: TextStyle(
-              fontFamily: fontFam, fontSize: 20, fontWeight: FontWeight.bold),
+              fontFamily: fontFam, fontSize: 14, fontWeight: FontWeight.bold),
         ));
   }
 
@@ -297,13 +299,14 @@ class Globals extends ChangeNotifier {
   printingAllPreferencesKeys() async {
     final preferences = await SharedPreferences.getInstance();
     // ignore: avoid_print
-    /* print("|||||||||||||CACHED||||||||||||||||"); */
+    print("|||||||||||||CACHED||||||||||||||||");
 
     int prefsLenght = preferences.getKeys().length;
-    //Set prefsSet = Set.from(preferences.getKeys());
+    Set prefsSet = Set.from(preferences.getKeys());
 
     for (var i = 0; i < prefsLenght; i++) {
-      /* print(prefsSet.elementAt(i).toString() +
+      // ignore: prefer_interpolation_to_compose_strings
+      print(prefsSet.elementAt(i).toString() +
           " => " +
           preferences.get(prefsSet.elementAt(i).toString()).toString() +
           " [" +
@@ -311,10 +314,10 @@ class Globals extends ChangeNotifier {
               .get(prefsSet.elementAt(i).toString())
               .runtimeType
               .toString() +
-          "]"); */
+          "]");
     }
     // ignore: avoid_print
-    /* print("||||||||||||||CACHED||||||||||||||||"); */
+    print("||||||||||||||CACHED||||||||||||||||");
   }
 
   Future clearCache() async {
@@ -587,7 +590,7 @@ class Globals extends ChangeNotifier {
     );
 
     if (picked != null && picked != selectedDate) {
-      showToast('IN DEVELOPMENT');
+      showToast('IN DEVELOPMENT'.tr());
       /* setState(() => {_selectedDate = picked, isScrapeDone = false});
       await scrapeScheduleForDay(_selectedDate.day);
       setState(() => {isDateChanged = true, isScrapeDone = true}); */

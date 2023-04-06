@@ -67,6 +67,7 @@ class _MainTableWidgetState extends State<MainTableWidget> {
                 Text('Play-off'.tr(), style: Globals().textStyleSchedule),
               ]),
           const SizedBox(width: 5),
+          const SizedBox(height: 20),
           BounceWidget(
               text: '',
               color: Colors.blue,

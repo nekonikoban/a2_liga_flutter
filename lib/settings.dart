@@ -318,7 +318,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                   isTeamSaved),
                                               await globals.setToCacheByKey(
                                                   '__my_team_data__',
-                                                  getMyTeamData(myTeam))
+                                                  getMyTeamData(myTeam)),
+                                              //SAVE TO CACHE
+                                              await Provider.of<GlobalData>(
+                                                      context,
+                                                      listen: false)
+                                                  .saveAppBarTitle(myTeam),
+                                              //NOTIFY LISTENER (SET STATE)
+                                              widget.globalData.appBarTitle =
+                                                  myTeam
                                             }
                                           else
                                             showToast(
@@ -466,7 +474,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Language'.tr(), style: globals.textStyleSchedule),
+        /* Text('Language'.tr(), style: globals.textStyleSchedule), */
         globals.devider20,
         //CHANGE LOCALIZATION
         Row(
@@ -574,7 +582,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             BounceWidget(
               shape: BoxShape.rectangle,
               text: 'Download'.tr(),
-              color: Colors.blue,
+              color: switchTheme ? globals.darkButtonColor : Colors.blue,
               icon: const Icon(Icons.download_outlined),
               onPressed: () async => {
                 if (widget.globalData.isConnected)
@@ -586,7 +594,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             BounceWidget(
               shape: BoxShape.rectangle,
               text: 'My Team'.tr(),
-              color: Colors.blue,
+              color: switchTheme ? globals.darkButtonColor : Colors.blue,
               asset: myTeam.isNotEmpty
                   ? Image.asset('assets/$myTeam.png', width: 20)
                   : Image.asset('assets/questionmark.png', width: 20),

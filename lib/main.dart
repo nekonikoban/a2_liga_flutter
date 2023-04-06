@@ -287,11 +287,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    /* globals.printingAllPreferencesKeys(); */
+    globals.printingAllPreferencesKeys();
     /* globals.clearCache(); */
     return OKToast(
         child: Scaffold(
-      appBar: globals.appBar('STATS'),
+      appBar: globals.appBar(Provider.of<GlobalData>(context).appBarTitle !=
+              'STATS'
+          ? '${'Following'.tr()} ${Provider.of<GlobalData>(context).appBarTitle}'
+          : 'STATS'),
       body: Container(child: navigation(context)),
     ));
   }
@@ -343,9 +346,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return [
       PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.table),
-        title: ("HOME".tr()),
+        title: ("TABLE".tr()),
         textStyle: TextStyle(fontFamily: globals.fontFam),
-        activeColorPrimary: globals.glowColor,
+        activeColorPrimary:
+            Provider.of<GlobalData>(context, listen: false).mainThemeColor ==
+                    globals.darkThemeColor
+                ? globals.darkNavColor
+                : globals.glowColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         contentPadding: 1.0,
       ),
@@ -353,21 +360,33 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.schedule_rounded),
           title: ("SCHEDULE".tr()),
           textStyle: TextStyle(fontFamily: globals.fontFam),
-          activeColorPrimary: globals.glowColor,
+          activeColorPrimary:
+              Provider.of<GlobalData>(context, listen: false).mainThemeColor ==
+                      globals.darkThemeColor
+                  ? globals.darkNavColor
+                  : globals.glowColor,
           inactiveColorPrimary: CupertinoColors.systemGrey,
           contentPadding: 1.0),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.person_2_rounded),
           title: ("TEAMS".tr()),
           textStyle: TextStyle(fontFamily: globals.fontFam),
-          activeColorPrimary: globals.glowColor,
+          activeColorPrimary:
+              Provider.of<GlobalData>(context, listen: false).mainThemeColor ==
+                      globals.darkThemeColor
+                  ? globals.darkNavColor
+                  : globals.glowColor,
           inactiveColorPrimary: CupertinoColors.systemGrey,
           contentPadding: 1.0),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.settings),
           title: ("SETTINGS".tr()),
           textStyle: TextStyle(fontFamily: globals.fontFam),
-          activeColorPrimary: globals.glowColor,
+          activeColorPrimary:
+              Provider.of<GlobalData>(context, listen: false).mainThemeColor ==
+                      globals.darkThemeColor
+                  ? globals.darkNavColor
+                  : globals.glowColor,
           inactiveColorPrimary: CupertinoColors.systemGrey,
           contentPadding: 1.0),
       /* PersistentBottomNavBarItem(

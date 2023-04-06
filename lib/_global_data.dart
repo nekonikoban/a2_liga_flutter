@@ -7,6 +7,7 @@ class GlobalData extends ChangeNotifier {
 
   factory GlobalData() {
     _instance._loadMainThemeColor(); // LOAD CANVAS COLOR IN CONSTRUCTOR
+    _instance._loadAppBarTitle(); // LOAD APP BAR TITLE
     return _instance;
   }
 
@@ -15,6 +16,8 @@ class GlobalData extends ChangeNotifier {
   Color _mainThemeColor = const Color.fromARGB(255, 6, 54, 108);
   final mainThemeColorCode = '4278597228';
   static const String _mainThemeColorKey = 'canvasColor';
+  static const String _appBarTitleKey = '__myteam__';
+  String _appBarTitle = 'STATS';
   String _appInfo = '';
   String _downloadLink = '';
   bool _isConnected = false;
@@ -22,6 +25,7 @@ class GlobalData extends ChangeNotifier {
   String _teamData = '';
 
   Color get mainThemeColor => _mainThemeColor;
+  String get appBarTitle => _appBarTitle;
   String get appInfo => _appInfo;
   bool get isConnected => _isConnected;
   double get refreshRate => _refreshRate;
@@ -50,6 +54,25 @@ class GlobalData extends ChangeNotifier {
   /* void _restartApp() {
     SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop', true);
   } */
+
+  set appBarTitle(String title) {
+    _appBarTitle = title;
+    notifyListeners();
+  }
+
+  Future<void> saveAppBarTitle(String title) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_appBarTitleKey, title);
+  }
+
+  Future<void> _loadAppBarTitle() async {
+    final prefs = await SharedPreferences.getInstance();
+    final titleValue = prefs.getString(_appBarTitleKey);
+    if (titleValue != null) {
+      _appBarTitle = titleValue;
+      notifyListeners();
+    }
+  }
 
   void updateAppInfo(appInfo) {
     _appInfo = appInfo;
