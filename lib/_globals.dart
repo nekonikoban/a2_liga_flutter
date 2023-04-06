@@ -297,7 +297,7 @@ class Globals extends ChangeNotifier {
   }
 
   printingAllPreferencesKeys() async {
-    final preferences = await SharedPreferences.getInstance();
+    /* final preferences = await SharedPreferences.getInstance();
     // ignore: avoid_print
     print("|||||||||||||CACHED||||||||||||||||");
 
@@ -305,6 +305,7 @@ class Globals extends ChangeNotifier {
     Set prefsSet = Set.from(preferences.getKeys());
 
     for (var i = 0; i < prefsLenght; i++) {
+      
       // ignore: prefer_interpolation_to_compose_strings
       print(prefsSet.elementAt(i).toString() +
           " => " +
@@ -317,7 +318,7 @@ class Globals extends ChangeNotifier {
           "]");
     }
     // ignore: avoid_print
-    print("||||||||||||||CACHED||||||||||||||||");
+    print("||||||||||||||CACHED||||||||||||||||"); */
   }
 
   Future clearCache() async {

@@ -28,10 +28,9 @@
 28.[DONE] Wrap all buttons and icons with `Bounce` widget
 29.[] Theres missing last round when scraping data on tap (teams.d) (but it is showing in schedule.d)
 30.[DONE] Dark Theme (settings.d)
-31.[] Radius on buttons (settings.d)
-32.[] Show `my team` next game (on appBar?)
-33.[] Fix loading gif on startup (remove background)
-34.[] Implement button color for dark theme
+31.[DONE] Show `my team` next game (on appBar?)
+32.[DONE] Fix loading gif on startup (remove background)
+33.[DONE] Implement button color for dark theme
 
 [DONE] Finally, Make code easier to read / update. General clean up.
 
