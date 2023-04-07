@@ -54,7 +54,7 @@ class CustomTeamTableRow extends TableRow {
                 )),
               ],
             rows: [
-                for (int i = 0; i < arrayTeams.length; i++) // x4
+                for (int i = 0; i < arrayTeams.length; i++)
                   DataRow(cells: [
                     DataCell(Text(
                       arrayTeams[i].split(',')[1],

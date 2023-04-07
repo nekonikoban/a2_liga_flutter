@@ -54,7 +54,7 @@ class CustomScheduleTableRow extends TableRow {
                 )),
               ],
             rows: [
-                for (int i = 0; i < arrayTeams.length - 1; i++) // x4
+                for (int i = 0; i < arrayTeams.length - 1; i++)
                   DataRow(cells: [
                     DataCell(Text(
                       arrayTeams[i].split(',')[0],

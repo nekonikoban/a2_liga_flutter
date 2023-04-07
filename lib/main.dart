@@ -25,6 +25,7 @@ Future<void> main() async {
   await AwesomeNotifications().initialize(
     null,
     [
+      //ID = 2 => FOR UPDATES
       NotificationChannel(
           channelKey: 'alerts',
           channelName: 'Basic Notifications',
@@ -101,10 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Future runScrape() async {
     //SCRAPE MAIN TABLE
     globals.scrapeData(context, array, true, isScrapeDone).then((currentArray) {
+      //HANDLE DIO ERROR [0 => ARRAY   1 => MYTEAM]
+      if (currentArray[0].isEmpty) {
+        //THIS WILL LEAVE LOADING SCREEN LOOP
+        return;
+      }
+      //UPDATE STREAM TO CURRENT ARRAY FROM TABLE
       setState(() => {
             isInitial = false,
             isScrapeDone = true,
-            //UPDATE STREAM TO CURRENT ARRAY FROM TABLE
             widget.globalDataStream.updateData(currentArray[0]),
           });
       //SET STREAM LISTENER FOR CHANGES
@@ -412,7 +418,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  //EXTRACTING onActionReceivedMethod FROM AwesomeNotifications NotificationController CLASS
+  //EXTRACTING onActionReceivedMethod FROM AwesomeNotifications NotificationController
   //USER TAPPED NOTIFICATION
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(

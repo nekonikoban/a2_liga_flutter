@@ -71,7 +71,7 @@ class Globals extends ChangeNotifier {
       'https://www.posavinasport.com/Ko%C5%A1arka/lmo.php?file=/3_12%20momcadi.l98';
   static const mainYoutubeChannelURL =
       'https://www.youtube.com/@a2liga-jugksbih352/videos';
-  static const youtubeAPI = 'AIzaSyD6Pw_8-lLsZRFJs5SC0qwEDs01PSXLPgM';
+  static const mainYoutubeApiKey = 'AIzaSyD6Pw_8-lLsZRFJs5SC0qwEDs01PSXLPgM';
   //MAIN TABLE
   final numOfTeams = 10;
   final imageWidth = 80.0;
@@ -360,7 +360,7 @@ class Globals extends ChangeNotifier {
         );
   }
 
-  //DOWNLOAD PUSH
+  //DOWNLOAD PUSH (ID=1 => BASIC NOTIFICATION, ID=2 => UPDATES)
   notificationUpdatePush(int id, String title, String message,
       String bigPicture, String largeIcon, NotificationLayout layout) async {
     await awesomeNotifications.createNotification(
@@ -436,58 +436,63 @@ class Globals extends ChangeNotifier {
 
   //SCRAPE MAIN TABLE
   Future scrapeData(context, array, isInitial, isScrapeDone) async {
-    array.clear();
-    //GET DATA FROM SCRAPE AND PARSE IT
-    final response = await httpClient.get(mainTableURL);
-    final document = parser.parse(response.data);
-    //SELECTING TABLE WITH CLASS `lmoInner` (SECOND TABLE) (FIRST ONE IS 'SCHEDULE' FROM ABOVE)
-    final tableMain = document.getElementsByClassName('lmoInner')[1];
-    final rows = tableMain.getElementsByTagName('tr');
+    try {
+      array.clear();
+      //GET DATA FROM SCRAPE AND PARSE IT
+      final response = await httpClient.get(mainTableURL);
+      final document = parser.parse(response.data);
+      //SELECTING TABLE WITH CLASS `lmoInner` (SECOND TABLE) (FIRST ONE IS 'SCHEDULE' FROM ABOVE)
+      final tableMain = document.getElementsByClassName('lmoInner')[1];
+      final rows = tableMain.getElementsByTagName('tr');
 
-    //GET CURRENT ROUND
-    final tableSchedule = document.getElementsByClassName('lmoInner')[0];
-    final th = tableSchedule.getElementsByTagName('th').first;
-    int kolo = int.parse(th.innerHtml.split('.')[0].isNotEmpty
-        ? th.innerHtml.split('.')[0]
-        : '0');
+      //GET CURRENT ROUND
+      final tableSchedule = document.getElementsByClassName('lmoInner')[0];
+      final th = tableSchedule.getElementsByTagName('th').first;
+      int kolo = int.parse(th.innerHtml.split('.')[0].isNotEmpty
+          ? th.innerHtml.split('.')[0]
+          : '0');
 
-    //'tmp' IS TEMPORARY STRING WHICH CONCENTRATES MULTIPLE ROWS INTO ONE SPERATED BY COMMAS
-    //'tmp' AFTER CONCENTRATION IS ADDED TO THE ACTUALL ARRAY AFTER SECOND LOOP SO IT CAN BE 'SPLITTABLE'
-    //SETTING `index` SO WE CATCH EXACT NUMBER OF TEAMS AND NOTHING ELSE
-    String tmp = '';
-    int index = 0;
-    for (final row in rows) {
-      if (index >= numOfTeams + 1) break;
-      final cells = row.getElementsByTagName('td');
-      for (final cell in cells) {
-        if (cell.text.trim().isNotEmpty && cell.text.trim() != ':') {
-          tmp += '${cell.text.trim()},';
+      //'tmp' IS TEMPORARY STRING WHICH CONCENTRATES MULTIPLE ROWS INTO ONE SPERATED BY COMMAS
+      //'tmp' AFTER CONCENTRATION IS ADDED TO THE ACTUALL ARRAY AFTER SECOND LOOP SO IT CAN BE 'SPLITTABLE'
+      //SETTING `index` SO WE CATCH EXACT NUMBER OF TEAMS AND NOTHING ELSE
+      String tmp = '';
+      int index = 0;
+      for (final row in rows) {
+        if (index >= numOfTeams + 1) break;
+        final cells = row.getElementsByTagName('td');
+        for (final cell in cells) {
+          if (cell.text.trim().isNotEmpty && cell.text.trim() != ':') {
+            tmp += '${cell.text.trim()},';
+          }
+        }
+        if (tmp.isNotEmpty) {
+          array.add(tmp);
+        }
+        tmp = '';
+        index++;
+      }
+      //REMOVE `KAZNE` FROM ARRAY
+      for (var i = 0; i < numOfTeams; i++) {
+        //REMOVE STRING `KAZNE` IF IT EXISTS. HAD TO SPLIT ARRAY AND MANUALLY REJOIN IT
+        if (array[i].split(',')[2].contains("Kazne")) {
+          List<String> splitArray = array[i].split(',');
+          if (splitArray.length > 2 && splitArray[2].contains("Kazne")) {
+            splitArray.removeAt(2);
+            array[i] = splitArray.join(',');
+          }
         }
       }
-      if (tmp.isNotEmpty) {
-        array.add(tmp);
-      }
-      tmp = '';
-      index++;
+      if (isInitial) {}
+      //SET `KOLO` TO CACHE MEM
+      await setToCacheByKey('__kolo__', kolo);
+      //SET `myTeam` TO CACHE
+      String myTeam = await getFromCacheByKey('__myteam__');
+      return [array, myTeam];
+      // ignore: unused_catch_clause
+    } on DioError catch (error) {
+      //print('scrapeData DioError => $error');
+      return ['', ''];
     }
-    //REMOVE `KAZNE` FROM ARRAY
-    for (var i = 0; i < numOfTeams; i++) {
-      //REMOVE STRING `KAZNE` IF IT EXISTS. HAD TO SPLIT ARRAY AND MANUALLY REJOIN IT
-      if (array[i].split(',')[2].contains("Kazne")) {
-        List<String> splitArray = array[i].split(',');
-        if (splitArray.length > 2 && splitArray[2].contains("Kazne")) {
-          splitArray.removeAt(2);
-          array[i] = splitArray.join(',');
-        }
-      }
-    }
-    if (isInitial) {}
-    //SET `KOLO` TO CACHE MEM
-    await setToCacheByKey('__kolo__', kolo);
-    //SET `myTeam` TO CACHE
-    String myTeam = await getFromCacheByKey('__myteam__');
-
-    return [array, myTeam];
   }
 
   bool isDataUpdated(current, initial, myTeam) {
@@ -624,7 +629,7 @@ class Globals extends ChangeNotifier {
 
       tmp = '';
 
-      if (arrayTeamSchedule.length >= maxRounds) {
+      if (arrayTeamSchedule.length > maxRounds) {
         break;
       }
     }
