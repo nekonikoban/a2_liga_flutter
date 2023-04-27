@@ -87,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late StreamSubscription<List<String>> _streamSubscription;
   final globals = Globals();
 
+  String following = 'Following';
+
   bool isInitial = true;
   bool isScrapeDone = false;
 
@@ -102,9 +104,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future runScrape() async {
     //SCRAPE MAIN TABLE
     globals.scrapeData(context, array, true, isScrapeDone).then((currentArray) {
+      following = 'Following';
       //HANDLE DIO ERROR [0 => ARRAY   1 => MYTEAM]
       if (currentArray[0].isEmpty) {
         //THIS WILL LEAVE LOADING SCREEN LOOP
+        following = '';
+        globalData.appBarTitle = 'WEBSITE NOT FOUND!'.tr();
         return;
       }
       //UPDATE STREAM TO CURRENT ARRAY FROM TABLE
@@ -158,7 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
     Completer completer; // COMPLETER TO PAUSE SCRAPING
-    _timer = Timer.periodic(Duration(hours: globals.refreshRate), (timer) {
+    _timer = Timer.periodic(
+        Duration(seconds: 5 /* hours: globals.refreshRate */), (timer) {
       if (globalData.isConnected) {
         completer = Completer(); // CREATE A NEW COMPLETER FOR EACH SCRAPE
         globals
@@ -299,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
       appBar: globals.appBar(Provider.of<GlobalData>(context).appBarTitle !=
               'STATS'
-          ? '${'Following'.tr()} ${Provider.of<GlobalData>(context).appBarTitle}'
+          ? '${following.tr()} ${Provider.of<GlobalData>(context).appBarTitle}'
           : 'STATS'),
       body: Container(child: navigation(context)),
     ));
