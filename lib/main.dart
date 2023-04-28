@@ -159,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
               })
         });
   }
+  
 
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
