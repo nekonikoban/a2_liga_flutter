@@ -103,10 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
   //THIS FUNCTION IS RAN ONCE UPON STARTUP
   Future runScrape() async {
     //SCRAPE MAIN TABLE
-    globals.scrapeData(context, array, true, isScrapeDone).then((currentArray) {
+    globals.scrapeData(context, array, true, isScrapeDone).then((resultArray) {
       following = 'Following';
       //HANDLE DIO ERROR [0 => ARRAY   1 => MYTEAM]
-      if (currentArray[0].isEmpty) {
+      if (resultArray[0].isEmpty) {
         //THIS WILL LEAVE LOADING SCREEN LOOP
         following = '';
         globalData.appBarTitle = 'WEBSITE NOT FOUND!'.tr();
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() => {
             isInitial = false,
             isScrapeDone = true,
-            widget.globalDataStream.updateData(currentArray[0]),
+            widget.globalDataStream.updateData(resultArray[0]),
           });
       //SET STREAM LISTENER FOR CHANGES
       _streamSubscription = widget.globalDataStream.stream.listen((newArray) {
@@ -163,8 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
     Completer completer; // COMPLETER TO PAUSE SCRAPING
-    _timer = Timer.periodic(
-        Duration(seconds: 5 /* hours: globals.refreshRate */), (timer) {
+    _timer = Timer.periodic(Duration(hours: globals.refreshRate), (timer) {
       if (globalData.isConnected) {
         completer = Completer(); // CREATE A NEW COMPLETER FOR EACH SCRAPE
         globals
