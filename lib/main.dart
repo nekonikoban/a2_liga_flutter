@@ -159,7 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
               })
         });
   }
-  
 
   //THIS FUNCTION RUNS PERIODICALLY, IT WILL SCRAPE DATA AND IF ARRAY IS DIFFERENT THEN STREAM IT WILL UPDATE
   void timerStart() {
@@ -424,7 +423,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  //EXTRACTING onActionReceivedMethod FROM AwesomeNotifications NotificationController
+  //EXTRACTING `TAPPED NOTIFICATION` onActionReceivedMethod FROM AwesomeNotifications NotificationController
   //USER TAPPED NOTIFICATION
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(
